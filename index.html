@@ -1,0 +1,4977 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ragazzo xso</title>
+  <meta name="description" content="Ragazzo xso, diario musicale: circa 60 canzoni scritte e prodotte in cameretta tra il 2018 e il 2025, da ascoltare e scaricare liberamente." />
+  <meta name="theme-color" content="#0a0a0a" />
+
+  <!-- Icone -->
+  <link rel="icon" href="favicon.ico" sizes="48x48" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+
+  <!-- Anteprima dei link condivisi (WhatsApp, Instagram, Facebook, Telegram…)
+       NB: og:image funziona in modo affidabile solo con l'indirizzo completo:
+       quando il sito è online sostituire il percorso con l'URL assoluto,
+       es. https://nomeutente.github.io/ragazzoxso/assets/og-image.jpg -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Ragazzo xso" />
+  <meta property="og:title" content="Ragazzo xso — Diario musicale" />
+  <meta property="og:description" content="Ragazzo xso, diario musicale: circa 60 canzoni scritte e prodotte in cameretta tra il 2018 e il 2025, da ascoltare e scaricare liberamente." />
+  <meta property="og:image" content="assets/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Ragazzo xso, diario musicale: scritta disegnata a mano" />
+  <meta property="og:locale" content="it_IT" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Font Inter (sottoinsieme latino, variabile) -->
+  <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+
+  <style>
+    /* ==========================================================
+       1. STILI DI BASE & TEMA BRUTALISTA SCURO
+       ========================================================== */
+
+    /* ==========================================================
+       0. FONT INTER
+       Versione variabile ridotta ai caratteri latini: tondo 400–700,
+       corsivo 400. Sorgenti originali in sorgenti/Inter.
+       ========================================================== */
+    @font-face {
+      font-family: 'Inter';
+      src: url('assets/fonts/inter-latin.woff2') format('woff2');
+      font-weight: 400 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Inter';
+      src: url('assets/fonts/inter-latin-italic.woff2') format('woff2');
+      font-weight: 400;
+      font-style: italic;
+      font-display: swap;
+    }
+
+    :root {
+      --bg-color: #0a0a0a;
+      --text-color: #f0f0f0;
+      --accent-color: #ffffff;
+      --border-color: #333333;
+      --muted-color: #888888;
+      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-custom: var(--font-main); /* usato solo se manca l'immagine di un anno */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    body {
+      position: relative;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: var(--font-main);
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    :focus-visible {
+      outline: 1px solid var(--accent-color);
+      outline-offset: 2px;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 680px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    /* ==========================================================
+       2. HEADER & COVER ARTWORK (16:9 FULL WIDTH)
+       ========================================================== */
+    header {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    /* Illustrazione in testata: riquadro 16:9 a tutta larghezza.
+       object-fit: contain mostra sempre il disegno intero, senza ritagli,
+       anche se il file non è esattamente 16:9. */
+    /* Animazione in testata (contiene già nome e sottotitolo del progetto) */
+    .header-animation {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Nascosto alla vista ma letto da motori di ricerca e screen reader */
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ==========================================================
+       3. ARCHIVIO BRANI & PLAYER AUDIO
+       ========================================================== */
+    .archive {
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    /* CAMPO CERCA */
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--border-color);
+      background: #0f0f0f;
+      padding: 8px 14px;
+      transition: border-color 0.2s ease;
+    }
+
+    .search-bar:focus-within {
+      border-color: #666;
+    }
+
+    .search-label {
+      color: #777;
+      border: 1px solid #222;
+      padding: 1px 6px;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      flex-shrink: 0;
+    }
+
+    .search-input {
+      flex-grow: 1;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--accent-color);
+      font-family: inherit;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+
+    .search-input:focus-visible {
+      outline: none;
+    }
+
+    .search-input::placeholder {
+      color: #555;
+    }
+
+    .search-input::-webkit-search-cancel-button {
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .search-clear {
+      background: none;
+      border: none;
+      color: var(--muted-color);
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 2px;
+      transition: color 0.2s ease;
+    }
+
+    .search-clear:hover {
+      color: #fff;
+    }
+
+    .search-count {
+      color: #555;
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+    }
+
+    .search-shuffle {
+      background: transparent;
+      border: 1px solid #222;
+      color: #777;
+      font-family: inherit;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 1px 6px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+
+    .search-shuffle:hover,
+    .search-shuffle[aria-pressed="true"] {
+      color: #fff;
+      border-color: #666;
+    }
+
+    .search-empty {
+      color: var(--muted-color);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 12px 0;
+      border-bottom: 1px dashed #1f1f1f;
+    }
+
+    .year-group {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .year-title {
+      font-family: var(--font-custom);
+      font-size: 1.8rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 4px;
+      color: var(--accent-color);
+    }
+
+    /* Anno disegnato a mano (immagine); se manca si usa il testo */
+    /* Effetto "off-grid": l'anno sborda un po' a sinistra del margine,
+       come scritto a mano sopra la pagina. --shift varia per ogni anno. */
+    .year-image {
+      height: 2.6rem;
+      width: auto;
+      display: block;
+      margin-bottom: 2px;
+      margin-left: var(--shift, -7px);
+    }
+
+    /* ==========================================================
+       3B. TEXTURE GRUNGE (sfondo decorativo)
+       Livello dietro ai contenuti; le texture sono posizionate
+       dallo script lungo tutta l'altezza della pagina.
+       ========================================================== */
+    .grunge-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .grunge-texture {
+      position: absolute;
+      width: min(var(--size, 480px), 95vw);
+      height: auto;
+      transform: translateX(-50%) rotate(var(--rotate, 0deg)) scaleX(var(--flip, 1));
+      opacity: var(--opacity, 0.9);
+      user-select: none;
+    }
+
+    /* ==========================================================
+       3C. DOODLE ACCANTO ALLE TRACCE
+       Posizione orizzontale (--x, in % della riga), spostamento
+       verticale (--y) e rotazione (--rotate) arrivano dai dati.
+       ========================================================== */
+    .track-doodle {
+      position: absolute;
+      top: 50%;
+      left: var(--x, 60%);
+      width: var(--doodle-size, 42px);
+      height: var(--doodle-size, 42px);
+      object-fit: contain;
+      transform: translate(-50%, calc(-50% + var(--y, 0px))) rotate(var(--rotate, 0deg));
+      pointer-events: none;
+      user-select: none;
+    }
+
+    @media (max-width: 500px) {
+      /* Su schermi stretti i doodle stanno nella metà destra per non coprire il titolo */
+      .track-doodle {
+        left: var(--x-narrow, 75%);
+        --doodle-size: 35px;
+      }
+    }
+
+    .track-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .track-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 12px 0;
+      border-bottom: 1px dashed #1f1f1f;
+    }
+
+    /* HEADER TRACCIA: MINIATURA COVER + TITOLO BRANO */
+    .track-header-row {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 40px;
+    }
+
+    .track-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .track-number {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* MINIATURA COVER (bottone che apre la modale) */
+    .track-thumb-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: block;
+      /* Effetto "figurina": --tilt è impostato dallo script per ogni cover */
+      transform: rotate(var(--tilt, 0deg));
+      transition: transform 0.25s ease;
+    }
+
+    .track-thumb-btn:hover,
+    .track-thumb-btn:focus-visible {
+      transform: rotate(0deg) scale(1.08);
+    }
+
+    .track-thumb {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+      display: block;
+      transition: opacity 0.2s ease, border-color 0.2s ease;
+    }
+
+    .track-thumb-btn:hover .track-thumb {
+      opacity: 0.8;
+      border-color: var(--accent-color);
+    }
+
+    .player-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .timeline-container {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Pulsanti Icona Custom */
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      transition: opacity 0.2s ease;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .icon-btn:hover {
+      opacity: 0.6;
+    }
+
+    .icon-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .track-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    /* Timeline Range Custom per tutto il sito */
+    input[type="range"].timeline {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 2px;
+      background: #333;
+      outline: none;
+      cursor: pointer;
+      display: block;
+    }
+
+    input[type="range"].timeline::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ffffff;
+      cursor: pointer;
+    }
+
+    input[type="range"].timeline::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      border: none;
+      border-radius: 50%;
+      background: #ffffff;
+      cursor: pointer;
+    }
+
+    /* Pulsanti Sotto-Player (Testo e Video) */
+    .extra-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+
+    .btn-text-toggle,
+    .btn-video-link {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--muted-color);
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: inherit;
+    }
+
+    .btn-text-toggle:hover,
+    .btn-video-link:hover,
+    .btn-text-toggle[aria-expanded="true"] {
+      color: #fff;
+      border-color: #666;
+    }
+
+    /* Box Espandibile del Testo, altezza dinamica */
+    .lyrics-container {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+      background: #111;
+      border-left: 2px solid var(--accent-color);
+      margin-top: 6px;
+    }
+
+    .lyrics-content {
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      color: #ccc;
+      white-space: pre-line;
+      font-family: var(--font-main);
+    }
+
+    /* ==========================================================
+       4. SEZIONE ABOUT ME
+       ========================================================== */
+    /* Chi sono: senza titolo visibile. Tutto allineato a sinistra come
+       l'elenco delle tracce; l'animazione sborda un po' dal margine
+       come gli anni disegnati a mano e fa da "titolo" della sezione. */
+    .about-section {
+      border-top: 1px solid var(--border-color);
+      padding-top: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 28px;
+    }
+
+    .about-image {
+      width: 220px;
+      height: 220px;
+      object-fit: contain;
+      flex-shrink: 0;
+      margin-left: -24px; /* off-grid, come gli anni */
+    }
+
+    .about-text {
+      max-width: 520px;
+      font-size: 0.9rem;
+      color: #bbb;
+      line-height: 1.7;
+      display: flex;
+      flex-direction: column;
+      gap: 2em;
+    }
+
+    /* Versi in apertura e chiusura: corsivo, centrati, a capo come scritti */
+    .about-verse {
+      font-style: italic;
+      color: #ddd;
+      white-space: pre-line;
+    }
+
+    @media (max-width: 500px) {
+      .about-image {
+        width: 180px;
+        height: 180px;
+      }
+    }
+
+    /* ==========================================================
+       5. POPUP COVER (MODALE)
+       ========================================================== */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      position: relative;
+      width: min(90vw, 80vh, 720px);
+      transform: rotate(var(--tilt, 0deg));
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-content img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      border: 1px solid var(--border-color);
+    }
+
+    .modal-close {
+      position: absolute;
+      bottom: 100%;
+      right: 0;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      line-height: 1;
+      padding: 0 0 8px 8px;
+      cursor: pointer;
+      color: var(--accent-color);
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-close:hover {
+      opacity: 0.6;
+    }
+
+    /* ==========================================================
+       5B. BARRA "IN RIPRODUZIONE" (FISSA IN BASSO)
+       ========================================================== */
+    .now-playing {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 900;
+      display: flex;
+      justify-content: center;
+      padding: 0 20px;
+      background: rgba(10, 10, 10, 0.92);
+      backdrop-filter: blur(6px);
+      border-top: 1px solid var(--border-color);
+      animation: now-playing-in 0.25s ease;
+    }
+
+    @keyframes now-playing-in {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .now-playing-inner {
+      width: 100%;
+      max-width: 680px;
+      padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .np-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .np-mode {
+      color: #777;
+      border: 1px solid #222;
+      padding: 1px 6px;
+      font-size: 0.65rem;
+      flex-shrink: 0;
+    }
+
+    .np-title {
+      color: var(--accent-color);
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-grow: 1;
+      min-width: 0;
+    }
+
+    .np-close {
+      background: none;
+      border: none;
+      color: var(--muted-color);
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 2px;
+      transition: color 0.2s ease;
+    }
+
+    .np-close:hover {
+      color: #fff;
+    }
+
+    .np-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .np-buttons {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .np-time {
+      color: #777;
+      font-size: 0.7rem;
+      letter-spacing: 0.5px;
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+      min-width: 72px;
+      text-align: right;
+    }
+
+    /* Spazio in fondo alla pagina per non coprire il footer */
+    body.has-now-playing {
+      padding-bottom: 120px;
+    }
+
+    /* ==========================================================
+       6. FOOTER
+       ========================================================== */
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding-top: 24px;
+      font-size: 0.8rem;
+      color: var(--muted-color);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    footer a {
+      color: #ccc;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- HEADER -->
+    <header>
+      <h1 class="visually-hidden">Ragazzo xso — Diario musicale</h1>
+      <img class="header-animation" src="assets/doodles/header-animation.gif" width="1360" height="765" fetchpriority="high"
+           alt="Ragazzo xso, diario musicale: scritta disegnata a mano con una luna e un volto sorridente" />
+
+    </header>
+
+    <!-- ARCHIVIO BRANI: generato automaticamente da TRACKS (vedi script in fondo) -->
+    <main class="archive">
+      <!-- CAMPO CERCA -->
+      <div class="search-bar" role="search">
+        <label class="search-label" for="search-input">Cerca</label>
+        <input type="search" class="search-input" id="search-input" placeholder="Titolo del brano…" autocomplete="off" spellcheck="false" aria-describedby="search-count">
+        <button type="button" class="search-clear" id="search-clear" aria-label="Cancella ricerca" hidden>&times;</button>
+        <span class="search-count" id="search-count" aria-live="polite"></span>
+        <button type="button" class="search-shuffle" id="shuffle-btn" aria-pressed="false" aria-label="Ascolta tutto in ordine casuale">▶ Casuale</button>
+      </div>
+      <p class="search-empty" id="search-empty" hidden>Nessun brano trovato</p>
+
+      <div class="archive" id="archive"></div>
+    </main>
+
+    <!-- SEZIONE ABOUT ME -->
+    <section class="about-section">
+      <h2 class="visually-hidden">Chi sono</h2>
+      <img class="about-image" src="assets/doodles/about-animation.gif" width="400" height="400" loading="lazy"
+           alt="Disegno animato di Ragazzo xso su una barca a vela, di notte, sotto la luna e le stelle" />
+      <div class="about-text">
+        <p class="about-verse">Mi ha traghettato
+a ritroso
+tra i fantasmi della mia adolescenza
+e poi oltre: fuori da me
+da quel mondo uterino
+fatto della sostanza dei sogni
+(i miei)
+per emergere sotto una tempesta
+con il tuo nome</p>
+        <p>
+          Mi chiamo Matteo Francescato, sono nato a Torino nel 1993. Ragazzo xso è lo pseudonimo con cui ho pubblicato, tra il 2018 e il 2025, circa 60 canzoni, scritte e prodotte “in cameretta”. La raccolta di queste canzoni ha dato forma a un diario emotivo-psicologico che esplora il periodo della vita che separa la fine dell’adolescenza dall’età adulta. Questa fase è stata per me segnata da una conversione radicale nel modo di relazionarmi con me stesso e con le altre persone, guidata da una consapevolezza nuova:
+        </p>
+        <p class="about-verse">Anche se è traumatico
+perdersi
+significa trovarti</p>
+        <p>Grazie a tutte le persone che mi hanno accompagnato in questo viaggio.</p>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>© Ragazzo xso. Tutti i contenuti sono rilasciati sotto licenza <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.it" target="_blank" rel="noopener">CC BY-NC 4.0</a>.</p>
+      <p>
+        Contatti: <a href="mailto:ragazzoxso@gmail.com">ragazzoxso@gmail.com</a>
+        · Instagram <a href="https://www.instagram.com/ragazzoxso/" target="_blank" rel="noopener">@ragazzoxso</a>
+      </p>
+    </footer>
+
+  </div>
+
+  <!-- BARRA "IN RIPRODUZIONE": visibile solo quando c'è un brano caricato -->
+  <div class="now-playing" id="now-playing" role="region" aria-label="In riproduzione" hidden>
+    <div class="now-playing-inner">
+      <div class="np-header">
+        <span class="np-mode" id="np-mode"></span>
+        <span class="np-title" id="np-title" aria-live="polite"></span>
+        <button type="button" class="np-close" id="np-close" aria-label="Chiudi il player">&times;</button>
+      </div>
+      <div class="np-controls">
+        <div class="np-buttons">
+          <button type="button" class="icon-btn" id="np-prev" aria-label="Precedente">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+          </button>
+          <button type="button" class="icon-btn" id="np-play" aria-label="Play">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <button type="button" class="icon-btn" id="np-next" aria-label="Successivo">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+          </button>
+        </div>
+        <div class="timeline-container">
+          <input type="range" class="timeline" id="np-timeline" value="0" min="0" max="100" step="0.1" aria-label="Avanzamento brano">
+        </div>
+        <span class="np-time" id="np-time">0:00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEXTURE GRUNGE: riempito dallo script, solo decorativo -->
+  <div class="grunge-layer" id="grunge-layer" aria-hidden="true"></div>
+
+  <!-- POPUP / MODALE COVER -->
+  <div class="modal" id="cover-modal" role="dialog" aria-modal="true" aria-label="Cover">
+    <div class="modal-content">
+      <button type="button" class="modal-close" id="modal-close" aria-label="Chiudi">&times;</button>
+      <img id="modal-img" src="" alt="" />
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       TEMPLATE HTML (clonati dallo script, non visibili)
+       ========================================================== -->
+  <template id="year-group-template">
+    <section class="year-group">
+      <h2 class="year-title"></h2>
+      <ol class="track-list"></ol>
+    </section>
+  </template>
+
+  <template id="track-template">
+    <li class="track-item">
+      <div class="track-header-row">
+        <button type="button" class="track-thumb-btn" hidden>
+          <img class="track-thumb" src="" alt="" loading="lazy" />
+        </button>
+        <span class="track-title"><span class="track-number"></span> <span class="track-name"></span></span>
+      </div>
+
+      <div class="player-row">
+        <button type="button" class="icon-btn btn-play" aria-label="Play">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <div class="timeline-container">
+          <input type="range" class="timeline" value="0" min="0" max="100" step="0.1">
+        </div>
+        <div class="track-actions">
+          <a class="icon-btn btn-download" href="" download aria-label="Download">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="extra-buttons">
+        <button type="button" class="btn-text-toggle" aria-expanded="false" hidden>Testo</button>
+        <a class="btn-video-link" href="" target="_blank" rel="noopener" hidden>Video ↗</a>
+      </div>
+
+      <div class="lyrics-container" hidden>
+        <div class="lyrics-content"></div>
+      </div>
+
+    </li>
+  </template>
+
+  <!-- ==========================================================
+       DATI: ELENCO TRACCE
+       ----------------------------------------------------------
+       - Inserire le tracce in ordine CRONOLOGICO (dalla più vecchia
+         alla più recente): una nuova uscita va aggiunta IN FONDO.
+       - La numerazione e l'ordine di visualizzazione (decrescente,
+         dalla più recente alla più vecchia) sono calcolati in automatico.
+       - Campi:
+           year   (obbligatorio) anno di uscita
+           title  (obbligatorio) titolo mostrato
+           file   (obbligatorio) nome file mp3 in assets/tracks/
+           cover  (opzionale)    nome file immagine in assets/covers/
+           video  (opzionale)    URL del video
+           lyrics (opzionale)    testo del brano
+           doodle (opzionale)    disegno accanto al titolo, da assets/doodles/doodle-<nome>.png
+                                 - forma breve:  doodle: "luna"   (consigliata: posizione automatica,
+                                   sfalsata rispetto al doodle precedente)
+                                 - forma estesa: doodle: { name: "luna", x: 68, y: -4, rotate: -8 }
+                                   per fissare a mano posizione (x in % della riga),
+                                   spostamento verticale (y, px) e rotazione (gradi)
+         Se un campo opzionale manca, il relativo bottone non compare.
+       ========================================================== -->
+  <script>
+    const TRACKS = [
+      // ——— 2018 ———
+      { year: 2018, title: "Mirador", file: "ragazzo-xso-mirador.mp3" },
+      {
+        year: 2018,
+        title: "Verdeazzurro",
+        file: "ragazzo-xso-verdeazzurro.mp3",
+        doodle: "fiore",
+        lyrics: `Fiore verdeazzurro forever lontano da me
+il tuo occhio è più lungo
+lo trovi in un lampo
+
+Fiore verdazzurro forever lontano da me
+il tuo occhio è più lungo
+lo trovi in un lampo
+ti volti m'incanto di nuovo
+
+Fermo al primo episodio
+da più di un anno
+alla fine una serie è una cosa seria
+e se stasera ci credi non fa una piega
+non giovane per sempre
+né giovani né adulti
+emo dal liceo
+se mi vedi canti eh oh
+
+E se mi chiedi, lavoro
+se mi chiami la sera io suono
+sto in cantina da questa mattina
+una parte di me sta da sola ha lasciato la fila
+ha già perso quel fiore, ha già perso la mira
+mi rimane l'aurora e davanti una vita
+
+Fiore verdeazzurro forever lontano da me
+il tuo occhio è più lungo
+lo trovi in un lampo
+
+Fiore verdazzurro forever lontano da me
+il tuo occhio è più lungo
+lo trovi in un lampo
+ti volti m'incanto di nuovo
+
+E se mi chiedi, lavoro
+se mi chiami la sera io suono
+sto in cantina da questa mattina
+una parte di me sta da sola ha lasciato la fila
+ha già perso quel fiore, ha già perso la mira
+mi rimane l'aurora e davanti una vita
+e davanti una vita
+e davanti una vita
+e una vita davanti...`,
+      },
+      { year: 2018, title: "Rimasti", file: "ragazzo-xso-rimasti.mp3" },
+      { year: 2018, title: "Jungla", file: "ragazzo-xso-jungla.mp3" },
+      { year: 2018, title: "Eride", file: "ragazzo-xso-eride.mp3" },
+      { year: 2018, title: "Negazione", file: "ragazzo-xso-negazione.mp3" },
+      { year: 2018, title: "Mariposa", file: "ragazzo-xso-mariposa.mp3" },
+      { year: 2018, title: "Cicatrice", file: "ragazzo-xso-cicatrice.mp3" },
+      // ——— 2019 ———
+      {
+        year: 2019,
+        title: "Revival",
+        file: "ragazzo-xso-revival.mp3",
+        cover: "ragazzo-xso-revival-cover.jpg",
+        lyrics: `Lontano dal cuore non sente 
+Scappi e mi sfuggi di mente 
+Non sono i fasti per sempre
+Non sono in forma per niente 
+Non ero sano di mente 
+Parla più piano mi offende 
+Se la memoria non mente 
+Ricordo me e te 
+Ricordi di neve ad agosto 
+Brucia la pelle
+Ricordi confusi di un posto 
+Sotto le stelle 
+È un labirinto 
+In cui mi perdo, sì 
+In cui rifugiarmi
+In cui mi metto a nudo
+
+E non è mai più domani 
+E non è mai più domani 
+E non è mai più domani 
+E non è mai più domani 
+
+Stasera ti guardo in foto assurdo 
+Paura del vuoto è buio 
+A volte hai negli occhi del fuoco 
+Mani sul volto, dai che si torna a lavoro 
+La miccia l'ho spenta di nuovo 
+Ritorna se avrai ancora fame
+Chi ha perso la strada rimane 
+Sai che per gli altri scompare
+
+Mani sugli occhi sotto la felpa 
+Fai come fosse una coperta 
+Le mani bianche sotto la felpa 
+Un fiore nasce un cuore si ferma
+Mani sugli occhi sotto la felpa 
+Fai come fosse una coperta 
+Le mani bianche sotto la felpa 
+Un fiore nasce un cuore si ferma 
+Un fiore nasce un cuore si ferma 
+Un fiore nasce un cuore si ferma 
+Un fiore nasce un cuore si ferma 
+Un fiore nasce un cuore si ferma 
+
+E non è mai più domani
+E non è mai più domani
+E non è mai più domani
+E non è mai più domani
+
+Oggi ti prendo io come in un gioco 
+Tanto poi pago io quando tocchiamo il suolo
+Oggi ti prendo io come in un gioco 
+Tanto poi pago io quando tocchiamo il suolo
+Oggi ti prendo io come in un gioco 
+Tanto poi pago io quando tocchiamo il suolo
+Oggi ti prendo io come in un gioco 
+Tanto poi pago io quando tocchiamo il suolo`,
+      },
+      {
+        year: 2019,
+        title: "Giochi '97",
+        file: "ragazzo-xso-giochi-97.mp3",
+        doodle: "farfalla",
+        cover: "ragazzo-xso-giochi-97-cover.jpg",
+        lyrics: `Yeah
+Eh
+Complice
+Tu rimani immobile
+Con l'orecchio sullo Smeg
+Il respiro corto
+Le piastrelle rosse
+Strane ombre sopra il gres
+Pensi a quei fantasmi
+Sali sulle punte
+Tanto ora tocca a te
+Conta fino a cento
+Conta fino a cento
+
+Conta fino a cento adesso tocca a te
+Metti quel mantello fuori tira vento
+Hai trasformato il tuo salotto in un castello
+Con i tuoi amici giochi tutto il tempo
+Esci dalla tana sai le regole
+Mi cerchi e non mi trovi hai perso le speranze
+Mi cerchi in tutta casa muovi quelle gambe
+Ciabatte troppo grandi corri da ogni parte
+Corri da ogni parte
+
+Domani non si va a scuola
+Resti a casa con la biro nuova
+Carta bianca rimani sola
+Cuori viola sulle lenzuola
+Domani non si va a scuola
+Resti a casa con la biro nuova
+Carta bianca rimani sola
+Cuori viola sulle lenzuola
+
+Cuori viola sulle lenzuola
+Fuori vola una mariposa
+Luna piena sì come in posa
+Cuore in gola, sì come suona
+Danza vola sì mariposa
+Fiori neri sopra ogni cosa
+Danza vola sì ma riposa
+Danza bianca sì come sposa
+
+A-aaah
+Yeah
+
+Fino alle sei del mattino
+Con i fantasmi nel frigo
+Ombre sopra il comodino
+Di notte fanno casino
+Fino alle sei del mattino
+Con i fantasmi nel frigo
+Ombre sopra il comodino
+Di notte fanno eeh eeh eh eeh
+Di notte fanno ooh ooh oh ooh
+Di notte fanno eeh eeh eh eeh
+Di notte fanno ooh ooh oh ooh
+
+Domani non si va a scuola
+Resti a casa con la biro nuova
+Carta bianca rimani sola
+Cuori viola sulle lenzuola
+Domani non si va a scuola
+Resti a casa con la biro nuova
+Carta bianca rimani sola
+Cuori viola sulle lenzuola
+
+Cuori viola sulle lenzuola
+Fuori vola una mariposa
+Luna piena sì come in posa
+Cuore in gola sì come suona
+Danza vola sì mariposa
+Fiori neri sopra ogni cosa
+Danza vola sì ma riposa
+Danza bianca sì come sposa`,
+      },
+      {
+        year: 2019,
+        title: "Paradise Kiss",
+        file: "ragazzo-xso-paradise-kiss.mp3",
+        cover: "ragazzo-xso-paradise-kiss-cover.jpg",
+        lyrics: `Vestita di fiori d'arancio
+Siedi in cucina fai pranzo
+Sashimi ce n'è d'avanzo
+Non ti sei accorta ma hai pianto
+L'ho cucinato per te eh
+È una sorpresa per te
+Vestito numero tre
+Indossalo solo per me
+Indossalo per me
+
+Come una gabbia nel paradiso
+Senza una chiave una via d'uscita
+Un'istantanea del tuo sorriso
+Troppo felici senza fatica
+Come una gabbia nel paradiso
+Senza una chiave una via d'uscita
+Un'istantanea del tuo sorriso
+Troppo felici senza fatica
+
+Troppo felici senza fatica
+Giorni che scappano dalle dita
+Troppo felici senza fatica
+Di notte sogni che sia finita
+
+Gomen ne
+Gomen ne
+Gomen ne
+Gomen ne
+Gomen ne
+Gomen ne
+Gomen ne
+Gomen ne
+Paradise Kiss 
+Paradise Kiss 
+Paradise Kiss 
+Paradise Kiss 
+
+Yeah
+Yeah
+Yeah
+Yeah
+Ehi
+Ti specchi in posate d'argento 
+Rigiri al dito un anello
+Niente tradisce il silenzio, 
+Luce che scandisce il tempo
+Bisogno di aiuto
+Sul Nokia in rubrica qualcuno
+Cerchi un'amica
+Una che non ti abbia tradita
+Queste giornate sembrano eterne
+Docce bollenti sì due di fila
+Fa sempre freddo quando sei assente
+Di notte giri la tua clessidra
+
+Come una gabbia nel paradiso
+Senza una chiave una via d'uscita
+Un'istantanea del tuo sorriso
+Troppo felici senza fatica
+Come una gabbia nel paradiso
+Senza una chiave una via d'uscita
+Un'istantanea del tuo sorriso
+Troppo felici senza fatica
+
+Troppo felici senza fatica
+Giorni che scappano dalle dita
+Troppo felici senza fatica
+Di notte sogni che sia finita
+
+Gomen ne
+Gomen ne
+Gomen ne
+Gomen ne
+Gomen ne
+Gomen ne
+Gomen ne
+Gomen ne
+Paradise Kiss 
+Paradise Kiss 
+Paradise Kiss 
+Paradise Kiss`,
+      },
+      {
+        year: 2019,
+        title: "Guardrail",
+        file: "ragazzo-xso-guardrail.mp3",
+        cover: "ragazzo-xso-guardrail-cover.jpg",
+        lyrics: `A3 affiora un'immagine
+effetto Moirè tra la pioggia e le lacrime
+e le lacrime e le lacrime
+effetto Moirè tra le ciglia e le nuvole
+
+Undici anni sguardo perso al finestrino
+lento il mio respiro appanna un motorino
+seguo il mio pensiero che corre veloce
+scrivo con il dito voglio stare in pace
+
+Campi di betulla deja vu Matrix
+conto questi alberi wow sembra Magritte
+prati vuoti o pieni di nulla
+fuochi fatui blue in the moonlight
+
+In the moonlight in the moonlight
+fuochi fatui blue in the moonlight
+in the moonlight in the moonlight
+fuochi fatui blue in the moonlight
+
+Chiudo gli occhi e corro corro sopra il guard rail
+chiudo gli occhi e corro corro sopra il guard rail
+più veloce vedi solo un'ombra Man Ray
+golden hour sembra l'intro di Life is strange
+
+Chiudo gli occhi e corro corro sopra il guard rail
+chiudo gli occhi e corro corro sopra il guard rail
+più veloce vedi solo un'ombra Man Ray
+golden hour sembra l'intro di Life is strange
+
+Conta e dimmi quanto fa
+quella sera là stessa luna ma
+era quindici anni anni fa
+una vecchia favola cerco quella pagina
+scappo dalla realtà
+l'autoradio suona già la seconda volta Max
+ho la testa in aria
+
+La fine del cielo bagna i tetti della mia città
+corre su chilometri di fili l'elettricità
+se mi cerchi sono ancora là
+
+Chiudo gli occhi e corro corro sopra il guard rail
+chiudo gli occhi e corro corro sopra il guard rail
+più veloce vedi solo un'ombra Man Ray
+golden hour sembra l'intro di Life is strange
+
+Chiudo gli occhi e corro corro sopra il guard rail
+chiudo gli occhi e corro corro sopra il guard rail
+più veloce vedi solo un'ombra Man Ray
+golden hour sembra l'intro di Life is strange`,
+      },
+      {
+        year: 2019,
+        title: "Calispera",
+        file: "ragazzo-xso-calispera.mp3",
+        cover: "ragazzo-xso-calispera-cover.jpg",
+        lyrics: `Ieri echi neve bianca sulla tua schiena
+piove sole Fanta sei primavera
+ridi sole in faccia poi torni seria
+lo zaino in spalla è quasi sera
+
+Mi chiedo se alle volte hai avuto paura
+se quando pensi guardi la luna
+
+Giuro ti rimango accanto per quel che vale
+c'è il cellulare se vuoi parlare
+scusa poi se manco quando stai male
+anche a Torino c'è il temporale
+
+La prima volta la primavera
+la luna storta la spiaggia nera
+gente che scappa dalla frontiera
+gente che ama sì calispera
+
+Stessa luna stessa alba una storia vera
+due cuori stanchi tre gradi appena
+testa bassa fra le labbra una penna a sfera
+le mani a terra una nuova era
+
+Io che volevo dirti sì tante cose
+sta volta me le scrivo quattro mimose
+
+Giuro ti rimango accanto per quel che vale
+c'è il cellulare se vuoi parlare
+scusa poi se manco quando stai male
+anche a Torino c'è il temporale
+
+La prima volta la primavera
+la luna storta la spiaggia nera
+gente che scappa dalla frontiera
+gente che ama sì calispera
+
+Gente che ama gente che spera
+c'è il temporale ma è primavera
+
+Giuro ti rimango accanto per quel che vale
+c'è il cellulare se vuoi parlare
+scusa poi se manco quando stai male
+anche a Torino c'è il temporale
+
+La prima volta la primavera
+la luna storta la spiaggia nera
+gente che scappa dalla frontiera
+gente che ama sì calispera`,
+      },
+      {
+        year: 2019,
+        title: "Spritz",
+        file: "ragazzo-xso-spritz.mp3",
+        cover: "ragazzo-xso-spritz-cover.jpg",
+        lyrics: `So che ridi di me
+cabaret
+oggi no Chardonnay
+moi je t'aime
+
+Due cristalli, il foyer
+io e te
+Astra come un privé
+demodé
+
+Sguardi complici
+guarda ho quasi i brividi ehi
+oggi è facile
+sì sembriamo piccoli ehi
+
+Facciamo cin cin
+dai versa uno spritz
+fra i vasi Ming che ora tremano
+
+E no noi non siamo infinito noi non siamo niente
+quello che ci riempie è tutta questa bella gente
+Shirika gang mani cuore mente
+Ragazzo perso feat. Rdm
+
+Controluce silhouette
+il mare sui tuoi capelli
+brucia il decolleté
+sale sulla mia pelle
+sì ballo con te
+non ci ferma l'agente
+non ci serve un club
+
+Il golfino indie rock
+Marigold ehi
+Il pagante sul pos
+to di blocco ehi
+
+Fai merenda per stress
+da studio oh no
+non risponde sul cell
+delirio 
+
+Dai non piangere
+sister i tuoi lividi ehi
+fanno male però
+dopo non scivoli ehi
+
+Facciamo cin cin
+dai versa uno spritz
+fra i vasi Ming che ora tremano
+
+E no noi non siamo...
+
+Controluce silhouette
+il mare sui tuoi capelli
+brucia il decolleté
+sale sulla mia pelle
+sì ballo con te
+non ci ferma l'agente
+non ci serve un club
+
+Ormai ci sopportiamo da un po'
+di me hai visto il peggio
+ma in compenso questo è il meglio che ho
+di me hai visto il peggio
+ma in compenso questo è il meglio che ho
+
+E no noi non siamo...
+
+Controluce silhouette
+il mare sui tuoi capelli
+brucia il decolleté
+sale sulla mia pelle
+sì ballo con te`,
+      },
+      {
+        year: 2019,
+        title: "Countdown",
+        file: "ragazzo-xso-countdown.mp3",
+        cover: "ragazzo-xso-countdown-cover.jpg",
+        lyrics: `Oh no non ti alzi hai perso il primo round
+oh no miasmi fuochi graffi è peggio di Smackdown
+stai tornando sola un'altra volta col cappuccio in testa dal discount
+sguardo basso fili dritta a casa nelle orecchie musica underground
+io sono un ragazzo xso sì quando mi cerchi ti esce "video not found"
+il mio nome è un bivio a un passo dall'arrivo fermo in un countdown
+fermo in un countdown yeah
+
+3, 2, 1, 2, 3 come in un playback
+esci con i tuoi fre
+chiudi col fight club
+ultimo night yeah ascolti “Nightcall”
+ti è rimasta in testa scusami that's my fault
+scappi dal centro la musica dancehall mi chiama
+salto ma quando si gira o mi sgama
+strappo una pagina tabula rasa
+è sicuro nel mondo qualcuno mi ama
+anche se sto solo qualcuno mi ama
+è sicuro nel mondo qualcuno mi ama
+
+Boom boom cha
+notte giovane
+ciglia bianche
+sembriamo sonnambuli
+fuochi fatui e mulini a vento
+cigni volano sì sono un segno
+navi nere ora salpano 
+gigli e salici piangenti ye
+gigli e salici piangenti
+gigli e salici piangenti
+la luna brucia su Ysselmonde
+
+
+la luna brucia su Ysselmonde
+la luna brucia su Ysselmonde`,
+      },
+      {
+        year: 2019,
+        title: "Debole",
+        file: "ragazzo-xso-debole.mp3",
+        cover: "ragazzo-xso-debole-cover.jpg",
+        lyrics: `Tagghi Verlaine, nella toilette
+ti vesti diversa da quei teenagers
+mi ricordo di te, la chimica che c'era
+baby siamo io e te, eri la mia chimera ehi
+baby siamo io e te, e adesso che te ne sei andata io grido
+
+Meri non ha guidelines
+non è più moda
+lei sta su un half pipe
+si vola
+
+Meri non ha guidelines
+non è più moda
+lei sta su un half pipe
+di moda si muore
+
+Salvami, in fronte ti leggo lasciami,
+cerchi la porta degli angeli,
+ciglia che graffiano il volto, eyeliner sul collo, tagli sul polso
+la vita in fondo è semplice
+ogni gesto è indelebile
+mi hai chiesto vivi tu per me
+ma vivi tu per chi?
+
+Se di te ho conosciuto soltanto le lacrime amare
+se hai il sorriso sepolto in un mare di pensieri scuri
+se ogni volta che ti apri poi fingi che tutto va bene
+chi ha il coraggio di amare ha la forza per essere debole ehi
+ha la forza per essere debole
+chi ha il coraggio di amare ha la forza per essere debole ehi
+ha la forza per essere debole
+
+Meri non ha guidelines
+non è più moda
+lei sta su un half pipe
+si vola
+
+Meri non ha guidelines
+non è più moda
+lei sta su un half pipe
+di moda si muore
+
+Batti con le mani ed i piedi ehi
+Faglielo sentire bene il tuo mayday
+Scalza con le cuffie sì Muori delay
+Stai cercando ancora i filtri maglia 666
+
+No, non la chiami fine se
+ti guardi attorno e tutto resta com'è
+No, mi sento colpevole
+ora mi guardo attorno e tutto parla di te
+
+Meri non ha guidelines
+non è più moda
+lei sta su un half pipe
+si vola
+
+Meri non ha guidelines
+non è più moda
+lei sta su un half pipe
+di moda si muore`,
+      },
+      {
+        year: 2019,
+        title: "Yah",
+        file: "ragazzo-xso-yah.mp3",
+        cover: "ragazzo-xso-yah-cover.jpg",
+        lyrics: `Un ombrello in mano il cielo contromano il sole passa da lontano
+se poi fa sereno fai un sorriso almeno che se no mi sento strano (2 v.)
+
+Finalmente son felice che non sia finita
+questa volta canto un inno alla vita
+un beat lento mento se sto fermo
+dancefloor ballo un lento mi addormento e svengo
+tra le braccia di una luna che ora da lassù
+un inverno caldo in radio suona Caribou
+oppure un pezzo spoken dei La Dispute
+e non ci penso più già non se ne può più
+
+Perché io sono adesso tu non sei qui per questo
+ma se ci ascoltiamo poi capiamo dove andiamo
+nello stesso posto ti giuro amica nello stesso posto
+un bosco chiaro ciliege un drago mi sfogo cado 
+poi rido sano di nuovo sano con te per mano
+ci guardiamo ma non ci tocchiamo
+non serve una prova per capire quello che proviamo
+io respiro piano tu rispondi vado 
+no non fa sereno ma nemmeno è un uragano
+sì Gazzelle tutti lo ascoltiamo
+
+Un ombrello in mano il cielo contromano il sole passa da lontano
+e se poi fa sereno fai un sorriso almeno che se no mi sento strano (2 v.)
+
+Non so se sia già lunedì
+sono cieco e tu mi dici vieni qui
+quella luce è di una stella andiamo lì
+tutto fermo come gli orologi di Dalì
+
+Non so se fermarmi
+non so se restare 
+non so controllarmi
+sto per inciampare (2 v.)`,
+      },
+      {
+        year: 2019,
+        title: "Monte Claro",
+        file: "ragazzo-xso-monte-claro.mp3",
+        cover: "ragazzo-xso-monte-claro-cover.jpg",
+        lyrics: `Inciampo sempre all'ultimo gradino
+la testa vuota si fin dal primissimo mattino
+il caffè latte con il vino
+preparati un panino che poi non torniamo a casa
+vestiti bene che hai la tosse da una settimana
+
+Mi perdo sempre perché seguo la tua scia
+scendo alla prossima fermata non leggo la via
+mi perdo sempre perché tanto non voglio arrivare
+rimango assente un'altra ora mentre guardo il mare
+
+Mi perdo sempre e dove dovrei andare
+il campus fuori mano i tuoi occhiali da sole
+tu che ridi da sola forse ridi di me
+del fatto che mi muovo solo quando ci sei te
+
+Mi perdo sempre e dove dovrei andare
+che qui ogni corridoio tanto sembra uguale
+tu stammi vicino che sto ancora male
+prometto che domani sarò puntuale
+
+Ho preso l'oki ed ora sono ok
+a cera in terra che si gioca a hockey
+abbiamo perso l'autobus per colpa mia
+pure con le Vans nuove inciampo sulla via
+
+Lo sai che questo vento spazza via i pensieri
+già non me ne ricordo e son partito ieri
+ancora abbasso gli occhi quando incrocio i tuoi
+da grande sarò un drago ora una carpa koi
+
+Mi perdo sempre e dove dovrei andare
+il campus fuori mano i tuoi occhiali da sole
+tu che ridi da sola forse ridi di me
+del fatto che mi muovo solo quando ci sei te
+
+Mi perdo sempre e dove dovrei andare
+che qui ogni corridoio tanto sembra uguale
+tu stammi vicino che sto ancora male
+prometto che domani sarò puntuale
+
+Prometto che domani sarò puntuale
+a pranzo mangio cotoletta col pullover
+ti sei vestito da te stesso a carnevale
+sicuro di essere lo stesso originale
+
+Sicuro di essere lo stesso originale (4 v.)
+
+Mi perdo sempre e dove dovrei andare
+il campus fuori mano i tuoi occhiali da sole
+tu che ridi da sola forse ridi di me
+del fatto che mi muovo solo quando ci sei te
+
+Mi perdo sempre e dove dovrei andare
+che qui ogni corridoio tanto sembra uguale
+tu stammi vicino che sto ancora male
+prometto che domani sarò puntuale
+
+Prometto che domani sarò puntuale (4 v.)`,
+      },
+      {
+        year: 2019,
+        title: "Kyrie eleison",
+        file: "ragazzo-xso-kyrie-eleison.mp3",
+        doodle: "fuoco",
+        cover: "ragazzo-xso-kyrie-eleison-cover.jpg",
+        lyrics: `Lo sai che cosa ci rimane, ci rimane
+mi chiedo cosa ci rimane, ci rimane
+puoi fare cosa vuoi ballare vuoi ballare
+
+Ho costruito un crocefisso di biro
+in bagno ascolto il tuo riverbero, eremo
+fammi cantare come Jeremy, Diary, in tuo nome
+ho scritto due versi nel letto
+aggrappato al mattino
+la testa se ne va in giro
+dimmi perché l'alba dura il tempo di un respiro
+non fa che correre
+Kyrie eleison
+vienimi a prendere
+Kyrie eleison
+
+Mi presti gli occhi degli angeli
+vorrei vederti in ogni suo sorriso
+sì tengo pure le lacrime
+amo anche i segni che porta sul viso
+e più che sentirmi cenere, mi sento un cretino
+se vuoi d'ora in avanti guida te, voglio perdermi al bivio
+
+Kyrie eleison
+Kyrie eleison
+
+Ti ho guardato pregare, ho sentito gridare in silenzio il tuo cuore, come una fontana,
+ritornare bambina
+lei ha bisogno di te, io ho bisogno di te
+il mare negli occhi mi riconosco sei brava a perdere
+al karaoke scegli tu per me ricordi sere nere
+al karaoke scegli tu per me ricordi sere nere
+
+Mi presti gli occhi degli angeli
+vorrei vederti in ogni suo sorriso
+sì tengo pure le lacrime
+amo anche i segni che porta sul viso
+e più che sentirmi cenere, mi sento un cretino
+se vuoi d'ora in avanti guida te, voglio perdermi al bivio
+
+Kyrie eleison (2 v.)`,
+      },
+      {
+        year: 2019,
+        title: "Weiss",
+        file: "ragazzo-xso-weiss.mp3",
+        cover: "ragazzo-xso-weiss-cover.jpg",
+        lyrics: `Sa sa
+no non è un soundcheck na na eh
+mi salvo in corner na na
+lost boy na na eh
+
+Sopra sopra sopra la testa mille luci mi
+gira gira gira la testa girano attributi
+fuori fuori fuori di testa dammi due minuti
+hai già lasciato la festa?
+ma non mi saluti?
+
+Ehi
+ok
+na na
+cerco sulla tua mappa una ics
+ok
+na na
+che mi porti da te
+
+Sopra la testa mille luci al led
+Io guardo in alto ma mi acceco e quindi guardo te
+che oggi hai gli occhi torbidi come una birra weiss
+guardi le targhe sulle porte senza leggerle
+
+E mi gira la testa a te sto giro no
+le mani sulle tue ginocchia che si abbracciano
+ed hai la pelle bianca come il cielo al nord
+un film che ti ha rubato il cuore e non ricordi il plot
+
+Ehi
+ti scansi
+ma ogni giorno che passa è un colpo che incassi
+e t'incazzi con me
+stanca di lottare
+già dall'alba
+che conti
+i tuoi sbagli
+
+Ti chiedo com'è
+mi riconosco colpevole
+ho superato il tuo limite
+un fiore di maggio un abbaglio ricordo che allora
+ero fiero di me
+
+Mi riconosco colpevole
+ho superato il tuo limite
+e adesso
+torno senza di te
+
+Sopra la testa mille luci al led
+Io guardo in alto ma mi acceco e quindi guardo te
+che oggi hai gli occhi torbidi come una birra weiss
+guardi un sepolcro vuoto ma non te ne vai mai
+
+Ed io ti ho chiesto com'è
+mi riconosco colpevole
+ho superato il tuo limite
+un fiore di maggio un abbaglio ricordo che allora
+ero fiero di me
+
+Mi riconosco colpevole
+ho superato il tuo limite
+e adesso
+torno senza di te
+
+Na na ehi (4 v.)`,
+      },
+      {
+        year: 2019,
+        title: "Spirale",
+        file: "ragazzo-xso-spirale.mp3",
+        cover: "ragazzo-xso-spirale-cover.jpg",
+        lyrics: `Torno tardi
+penso
+mi manchi
+vorrei
+svegliarti
+adesso
+mi sembra che
+la tua foto
+piena di graffi
+sazia di sguardi
+prenda vita
+
+E mi sembra di sentire la tua voce
+è una cassa che spinge forte nel mio petto
+e se vuoi puoi alzare un po' il volume
+tanto è chiaro che a letto non ci vado lo stesso
+sguardo perso nel
+vuoto, non è cosa dovrei andare al mare
+solo, non mi è nuovo, adoro farmi male
+ed ho un cerchio alla testa pare una spirale
+tu non perdermi di vista che qui marca male
+
+Corri Forrest corri devo respirare
+nuovo far west Watanabe
+contro mano è una spirale
+lascio indietro solo grane
+
+Corri Forrest corri devo respirare
+nuovo far west Watanabe
+contro mano è una spirale
+ed ogni sbaglio mi porta da te
+
+E ho sempre fatto solo quel che mi sentivo
+ma riconosco che non è abbastanza
+noi già sepolti dentro quella stanza
+le mani che mi tremano, il cuore in gola, un brivido
+ma ora sono
+vuoto la mia stanza ormai è un'astronave
+tra noi una distanza che non so colmare
+e viaggio con la testa in testa ho solo pare
+ho il culo su una sedia da due settimane
+
+Io ti scrivo in versi tu mi mandi emoji
+ormai mi tieni in tasca tipo tamagotchi
+davvero, tu mi piaci ma non sei White Lover
+e io dove finisco quando fai game over
+
+Corri Forrest corri devo respirare
+nuovo far west Watanabe
+contro mano è una spirale
+lascio indietro solo grane
+
+Corri Forrest corri devo respirare
+nuovo far west Watanabe
+contro mano è una spirale
+ed ogni sbaglio mi porta da te
+
+ed ogni sbaglio mi porta da te`,
+      },
+      {
+        year: 2019,
+        title: "Limite",
+        file: "ragazzo-xso-limite.mp3",
+        doodle: "ciglia",
+        cover: "ragazzo-xso-limite-cover.jpg",
+        video: "https://youtu.be/xaWjv0pqtD0",
+        lyrics: `Sola andata non voglio il ritorno
+a sto giro vado fino in fondo
+sto nel mare là dove non tocco
+dove le sirene mi nuotano attorno
+
+Tu mi chiami ma io non ti rispondo
+se mi fermo già lo so che affondo
+sto nel mare là dove non tocco
+con la luna muore sotto a un altro giorno
+
+All in tiro a sorte
+mi sento leggero vedere la riva mi ha reso più forte
+rimango sospeso tra l'alba, il mattino e una vita di "forse"
+
+Lontano dagli occhi lontano dal cuore sabbia fino ai polsi puoi fare rumore
+lontano dagli occhi lontano dal cuore sabbia fino ai polsi coi segni del sole
+
+E non ho più parole per dirti che
+non ho più intenzione di vincere
+tutte quelle storie che ti racconti
+ora sono il tuo limite (2 v.)
+
+Voglio perdermi e trovare il mondo sì sì
+come Truman arrivare al fondo ya ya
+sto nel mare là dove non tocco
+voglio spostare il cielo e poi guardare sotto
+
+Sembra un anno ma è passato un giorno
+gli occhi mi si sono abituati al buio
+corri che l'attesa ormai mi è andata a noia
+io ti vedo I know ya
+non ci credi no ya
+aspetta ancora un'ora
+
+Baby scusami sai che sono sincero
+tu che dici sì ma non può essere vero
+fossi un altro mi prenderesti sul serio
+ma hai la faccia di chi ha incontrato un alieno (2 v.)
+
+All in tiro a sorte
+mi sento leggero vedere la riva mi ha reso più forte
+rimango sospeso tra l'alba, il mattino e una vita di "forse"
+
+Lontano dagli occhi lontano dal cuore sabbia fino ai polsi puoi fare rumore
+lontano dagli occhi lontano dal cuore sabbia fino ai polsi coi segni del sole
+
+E non ho più parole...
+
+Fuori dal gioco è un nuovo gioco
+fuori dal guscio scherzi con il fuoco
+voglio cadere finché sento il vuoto
+sento un nodo mi sento solo ma
+
+E non ho più parole...`,
+      },
+      {
+        year: 2019,
+        title: "Godelive",
+        file: "ragazzo-xso-godelive.mp3",
+        cover: "ragazzo-xso-godelive-cover.jpg",
+        lyrics: `C'mon girl 
+you don't need me anymore
+
+Baby quando parli mi rubi la scena ehi
+tieni un altro party ma in realtà sei sola dai
+su parliamo di te puoi mentire alla gente
+a quelli che di te non gliene frega niente
+
+Ma non a me everybody hands up in the air
+puoi mentire agli altri non a me
+dicevo, non a me
+non a me
+
+Va bene se stai zitto dico una cosa
+ho perso il cellulare in mezzo alle lenzuola
+in sogno ho chiesto scusa sì per ogni cosa
+mi sveglio e ho una notifica da mia zia Rosa
+
+T'alzi e fai il saluto al sole 
+mi dici non ho pianto fra', è solo sudore
+yeah ehi
+a scuola col range rover
+da grande tu vuoi il cash non vendere rose
+non guardare il sole
+
+Non a me everybody hands up in the air
+Puoi mentire agli altri non a me
+Dicevo, non a me
+Hello world 
+cercasi coerenza
+questa è un open call
+cerco la tua mano non mi dire no
+prima fai le corna e poi fai l'autostop
+
+Godelive non piangere per me
+non voglio cedere
+non piangere per me
+non voglio cedere
+
+Cardi e cardamomi
+lo sai se non ti pungi non è una love story
+m'alzo con la luna storta
+in testa ho troppe pare mi serve la scorta
+
+Sembro uscito da un coma
+sì è dal 2009 che sto fuori moda
+m'alzo con la luna storta
+in testa ho troppe pare mi serve la scorta
+
+Cardi e cardamomi
+lo sai se non ti pungi non è una love story
+m'alzo con la luna storta
+in testa ho troppe pare mi serve la scorta
+
+Sembro uscito da un coma
+sì è dal 2009 che sto fuori moda
+m'alzo con la luna storta
+in testa ho troppe pare mi serve la scorta`,
+      },
+      {
+        year: 2019,
+        title: "Wicca",
+        file: "ragazzo-xso-wicca.mp3",
+        lyrics: `Lost boy on the beat
+
+Blank canvas
+black pantera
+vieni a cercarmi
+sto fuori dalla scena
+non rispetto i tuoi standard
+ISO-la, save me
+ma quale trama
+Pollock on the beat
+
+Ripeto un mantra
+io valgo zero piantala
+m'affossa il karma
+ma di essere giù capita
+getta quell'arma
+fai bang ma non è carica
+ripeto un mantra
+scappa via di qua
+
+Scroll down
+fino allo spasimo
+cerco tra le tue foto
+nuovo ossigeno
+aspe' aspe'
+close down
+ti vedo in pixel
+chi non respira
+non esiste
+
+Yah yah
+
+Tu vuoi me quando perdo il controllo, yah
+lost boy sad boy out of control
+fai piani ma non sai di che ho bisogno
+lost boy sad boy out of control
+
+Lost boy on fire (alta)
+spicy like paprika
+witches è un sabba
+ti riconosco
+dagli occhi di ambra
+fiori del diavolo
+Wicca di maggio
+nella mia stanza
+
+Non dirmi di no 
+lost boy sad boy
+che sto K.O.
+lost boy sad boy`,
+      },
+      {
+        year: 2019,
+        title: "Cuscino",
+        file: "ragazzo-xso-cuscino.mp3",
+        doodle: "cuore",
+        cover: "ragazzo-xso-cuscino-cover.jpg",
+        lyrics: `Ma che ho fatto che mi segui come un'ombra
+che vuol dire che mi giri sempre intorno
+la mia mano affondo, ti passa attraverso
+ai tuoi occhi in fondo vedo un buio pesto
+mi ci perdo spesso un po' come adesso
+che sto allo specchio, eh
+forse sei lo spettro dietro al mio riflesso
+la tua voce è il fine ed il mio corpo è il mezzo
+dimmi che significa ragazzo perso
+cancello la fine e ti racconto il resto
+
+Da dove inizio a raccogliere i pezzi
+dalla volta che ho perso i sensi ma
+tra le tue braccia il sole su quei jeans
+ricordo l'effetto che fa
+nel dormiveglia
+della tua felpa io sento ancora l'odore
+mi sento battere il cuore, ti sento battere il cuore
+
+Apro gli occhi è notte fonda tu non dormi
+occhi stanchi troppi enigmi poi non li risolvi
+lost in translation lo sai che ti penso mi guardi al rovescio così all'improvviso il mio sembra un sorriso
+ti alzi e mi siedi vicino 
+eyeliner sbavato sul viso
+sento il tuo respiro
+lacrime sul mio cuscino
+
+Da dove inizio a raccogliere i pezzi
+dalla volta che ho perso i sensi ma
+tra le tue braccia il sole su quei jeans
+ricordo l'effetto che fa
+nel dormiveglia
+della tua felpa io sento ancora l'odore
+mi sento battere il cuore, ti sento battere il cuore
+
+E una rosa muore ma un pezzo è per sempre
+mi chiedi che intendi conservo i momenti passati insieme
+tipo ogni scossa a quel concerto, il sipario spento
+un cielo nero senza stelle
+tu che mi tiri fuori divorata dalla febbre
+la fronte bianca gocce di sudore come perle
+mi prendi il viso e poi lo premi contro la tua pelle
+da quell'istante io ti giuro non ho visto più niente
+
+Da dove inizio a raccogliere i pezzi
+dalla volta che ho perso i sensi ma
+tra le tue braccia il sole su quei jeans
+ricordo l'effetto che fa
+nel dormiveglia
+della tua felpa io sento ancora l'odore
+mi sento battere il cuore, ti sento battere il cuore`,
+      },
+      {
+        year: 2019,
+        title: "Captcha",
+        file: "ragazzo-xso-captcha.mp3",
+        lyrics: `Cerco i semafori CAPTCHA mi arrendo
+no "non sono un robot" così lo divento poi
+mixdown master droppo su Landr
+jeans e tshirt sul pavimento
+
+Touch ID
+storia IG
+ora d'aria
+Vis a vis
+conto i click
+guardo un film
+Catherine Spaak
+Maryl Streep
+
+Lei-lei non c'è
+tu la chiami Casper
+grido come i Luminal
+mi capisci come no
+crasho il basso on the floor
+
+Cerco i semafori perché non sono un robot
+ne droppo un'altra che mi sento solo
+un nuovo azzardo Sakura Card Captor
+non punto in alto Cattelan X Factor
+
+King Crimson nella suite
+Hilton ehi
+King Crimson al
+Samsara Beach Party
+perché salti?
+di che parli?
+vuoi fermarmi?
+lo sai che c'è?
+ti spacco lo smartphone
+
+Ti giuro l'ho fatto per te, yeah
+pensa quello che vuoi
+
+Yayaya
+
+Bless God
+blend mode
+Junipero
+John Doe
+popstar
+bill please
+firmacopie
+One D
+
+Bless God
+blend mode
+Junipero
+John Doe
+popstar
+Lil peep
+firmacopie
+One Piece
+
+Cerco i semafori perché non sono un robot
+ne droppo un'altra che mi sento solo
+un nuovo azzardo Sakura Card Captor
+non punto in alto Cattelan X Factor
+
+Bless God
+blend mode
+Junipero
+John Doe
+popstar
+bill please
+firmacopie
+One D
+
+Bless God
+blend mode
+Junipero
+John Doe
+popstar
+Lil peep
+firmacopie
+One Piece`,
+      },
+      {
+        year: 2019,
+        title: "Angeli",
+        file: "ragazzo-xso-angeli.mp3",
+        doodle: "lacrime",
+        cover: "ragazzo-xso-angeli-cover.jpg",
+        lyrics: `Mi si spengono gli occhi e ho un buco nero dentro
+una crepa che si allarga dall'interno verso l'esterno
+mi lascia muto di fronte alle cose belle
+mi lascia un senso di vuoto senza un'urgenza
+se non quella di arrendermi
+subito dubito, non cerco le stelle mi
+serve qualcosa che io non voglia perdere
+mi serve solo qualcuno da proteggere
+
+Impara la lezione
+brucia di vita come i Negazione
+non è finita
+sei il numero nove
+giri al rovescio
+cambi direzione
+
+E con le dita conto ciò che mi resta
+è una tempesta ma nella testa
+mi han detto che c'è un posto là che mi spetta
+il fiore dei miei anni
+per la delizia degli angeli
+
+Poi mi sorridi ed io mi chiedo come fai
+ti giuro fossi te non mi cercherei mai e poi mai
+mi sto rialzando in piedi aggrappato ai tuoi denti
+sto riposando un po' all'ombra dei tuoi capelli
+
+Midnight McNuggets
+lo sai che al Mc mi manchi te
+Moonlight sul browser
+lo sai, alone on friday night
+
+Impara la lezione
+brucia di vita come i negazione
+non è finita
+sei il numero nove
+giri al rovescio
+cambi direzione
+
+E con le dita conto ciò che mi resta
+è una tempesta ma nella testa
+mi han detto che c'è un posto là che mi spetta
+il fiore dei miei anni
+per la delizia degli angeli`,
+      },
+      {
+        year: 2019,
+        title: "Black",
+        file: "ragazzo-xso-black.mp3",
+        cover: "ragazzo-xso-black-cover.jpg",
+        lyrics: `Perso nei miei pensieri
+Penso che se ci ripenso sto male davvero
+Passo e ripasso le dita sopra la mia gola
+Non so se respiro o sto in cielo
+No, anche se lo ammetto
+In fondo sarebbe bello sparire d'inverno, 
+Ma dentro il tuo letto
+
+Come sto?
+118
+Ho una fitta che mi passa il cuore di colpo
+Sì da parte a parte
+A poco a poco
+Sento disarmarmi
+Perdo le mie ali
+Prendi al volo le mie mani, cerco uno sbocco
+Poi socchiudi le persiane, che se no sbocco
+Quella luce sì mi salva ma non mi cambia
+Tra due giorni torno a farlo, già non mi basta
+
+Black sulla base, non mi vedo i piedi
+Bang bang, sto andando a fondo giù giù non mi tieni
+Scusa non sono stato sincero
+Ti ho detto che ti odio ma non è vero
+Black sulla base, non mi vedo i piedi
+Bang bang, sto andando a fondo giù giù non mi tieni
+Un lampo t'illumina a giorno
+Tu dimmi se dormo o se è un brutto sogno
+
+Perso nei miei pensieri
+Penso che se ci ripenso sto male davvero
+Passo e ripasso le dita sopra la mia gola
+Non so se respiro o sto in cielo
+No, anche se lo ammetto
+In fondo sarebbe bello sparire d'inverno, 
+Ma dentro il tuo letto
+
+Toccare il fondo
+Come sport,  siamo i pro
+Come chi non sa dire mai di no
+Come chi sorride ma dentro muore
+Facciamo cincin sì per ogni errore
+Stringiamoci forte e poi miriamo al sole
+Un solo cuore
+Proviamo lo stesso dolore
+
+Black sulla base, non mi vedo i piedi
+Bang bang, sto andando a fondo giù giù non mi tieni
+Scusa non sono stato sincero
+Ti ho detto che ti odio ma non è vero
+Black sulla base, non mi vedo i piedi
+Bang bang, sto andando a fondo giù giù non mi tieni
+Un lampo t'illumina a giorno
+Tu dimmi se dormo o se è un brutto sogno
+
+La mia vita è una favola 
+Inizia da c'era una volta
+Sono fermo a quella pagina
+Ho paura di una svolta
+La mia vita è una favola 
+Inizia da c'era una volta
+Sono fermo a quella pagina
+Ho paura di una svolta
+
+Perso nei miei pensieri
+Penso che se ci ripenso sto male davvero
+Passo e ripasso le dita sopra la mia gola
+Non so se respiro o sto in cielo
+No, anche se lo ammetto
+In fondo sarebbe bello sparire d'inverno, 
+Ma dentro il tuo letto`,
+      },
+      {
+        year: 2019,
+        title: "Marigold",
+        file: "ragazzo-xso-marigold.mp3",
+        cover: "ragazzo-xso-marigold-cover.jpg",
+        lyrics: `Meri la metro per Fermi no, non può fermare il tempo
+Anche se piove e fuori è deserto
+(Mm mm mm)
+L'ultima corsa, poi autostop
+Non torni indietro
+Appanni i vetri con le hot wings
+(Butti giù la pepsi)
+
+Puoi gridare al tuo riflesso
+Frasi senza senso
+Qui è la base, stop
+Puoi ballare controvento
+Fuori c'è l'inverno
+Dentro soffia un phon
+
+Shutdown oh hey shutdown Meri eh
+Shutdown oh hey shutdown 
+Marigold, Meri, Punk Goes Pop
+Tu sei real fake, bro
+Sei la hit ma sul mio ipod
+Crush, crush, Paramore
+Marigold
+Siamo mostri sul dancefloor
+Sono nostri i fan dei FOB,
+Non ho pianto per un no
+Non mi hai chiesto come sto
+
+E bang, bang, spari nel cielo
+I tuoi occhi come pozze in strada e a un tratto 
+Playback del tuo passato
+Il petto fa male, non mi lasciare
+Me e te, fra pioggia e nuvole
+Due comparse dentro a un film d'essai
+È il capolinea devi scendere, devo scendere
+Devo scegliere
+
+Questo treno è fermo già da un po'
+Scusa non ti guardo se no perdo il filo
+Come quello che una volta mi hai legato al dito
+Una firma in bianco che mi lega al tuo destino
+La tua voce io la vorrei bere
+Vorrei bere pure il tuo sorriso
+Ti ricordi che stavamo sempre insieme
+Mi chiedo perché sei distante all'improvviso
+
+Puoi gridare al tuo riflesso
+Frasi senza senso
+Qui è la base, stop
+Puoi ballare controvento
+Fuori c'è l'inverno
+Dentro soffia un phon
+
+Shutdown oh hey shutdown Meri eh
+Shutdown oh hey shutdown 
+Marigold, Meri Punk goes pop
+Tu sei real fake, bro
+Sei la hit ma sul mio ipod
+Crush, crush, Paramore
+Marigold
+Siamo mostri sul dancefloor
+Sono nostri i fan dei FOB,
+Non ho pianto per un no
+Non mi hai chiesto come sto
+
+E bang, bang, spari nel cielo
+I tuoi occhi come pozze in strada, e a un tratto 
+Playback del tuo passato
+Il petto fa male, non mi lasciare
+Me e te, tra pioggia e nuvole
+Due comparse ma in un film d'essai
+È il capolinea devi scendere, devo scendere
+Devo scegliere
+
+E bang, bang, spari nel cielo
+I tuoi occhi come pozze in strada, e a un tratto 
+Playback del tuo passato
+Il petto fa male, non mi lasciare
+Me e te, tra pioggia e nuvole
+Due comparse ma in un film d'essai
+Capolinea devi scendere, devo scendere
+Devo scegliere, a-ah
+Devo scegliere, a-ah
+Devo scegliere, a-ah
+Devo scegliere, a-ah`,
+      },
+      { year: 2019, title: "Laguna rossa (prod. Yuri)", file: "ragazzo-xso-laguna-rossa-prod-yuri.mp3" },
+      {
+        year: 2019,
+        title: "Joker (prod. BMBNO)",
+        file: "ragazzo-xso-joker-prod-bmbno.mp3",
+        cover: "ragazzo-xso-joker-cover.jpg",
+        lyrics: `So sad 
+Io non sono un loner
+Mi hai maledetto
+Scrivo come Baudelaire
+Senza l'assenzio
+Sto ridendo come Joker
+Senza alcun senso
+No, non sono un poser
+Viene da dentro
+
+Non ho scelto questa vita, è lei che ha scelto me
+Sto spezzando fiori fra le dita ed esce polvere
+Ritaglio sorrisi sul mio volto con la forbice
+La mia crisi è calma che ti chiedi aspe' ma c'è o non c'è
+
+La mia crisi è calma
+Nel mio petto fuoco, è un sabba
+La mia voce trema d'ansia
+Questa notte non mi sazia
+Quella luna non mi basta
+
+So sad 
+Io non sono un loner
+Mi hai maledetto
+Scrivo come Baudelaire
+Senza l'assenzio
+Sto ridendo come Joker
+Senza alcun senso
+No, non sono un poser
+Viene da dentro`,
+      },
+      // ——— 2020 ———
+      {
+        year: 2020,
+        title: "Arizona",
+        file: "ragazzo-xso-arizona.mp3",
+        video: "https://youtu.be/rQTOzjRy02g",
+        lyrics: `Il cielo è terso a Maple Street
+Ma non mi fido
+Chilometri e chilometri e chilometri
+Diviso da te
+Io sto impazzendo, mm
+Troppo silenzio qui
+Non mi sorprende che il diavolo 
+Apparve nel deserto
+Vedi le nuvole ad ovest
+Non uscire all'aperto
+Faccio fatica a capire
+Se sono sveglio
+Non riesco più a ricordare
+Cosa c'è stato fra noi
+Non voglio perdere il senno
+Piuttosto sad boy
+
+Giuro di notte io sento
+Le stelle bruciare
+E avverto
+Che tu puoi fare a meno di me
+Non ne volevo parlare
+L'Arizona mi ha fatto del male
+E ho bisogno di te
+
+Quest'estate mi hanno letto l'aura
+E ho perso ogni speranza
+Ho perso ogni speranza
+Quest'estate mi hanno letto l'aura
+E per curare l'ansia
+Ho preso una vacanza
+
+Strappo dal muro un postit
+"Scappa!"
+"Scappa via da qua"
+Conto gli ultimi spicci
+Sabbia sui miei jeans
+La rete fa i capricci
+Mica il tuo 4G
+Lavo la polvere dagli occhi
+E canto "Let it be"
+Alle mie spalle la tempesta
+Prova a prendermi
+Ci son più buche in questa strada
+Che in tutto il Grand Canion
+Vediamo se dall'inferno
+Si può tornare indietro
+
+Non ho un biglietto di ritorno
+Guido ormai da ore 
+Non dormo
+Getto in strada quell'arbre magique
+Te ne dovevo parlare
+L'Arizona mi ha fatto del male
+E ho bisogno di te
+
+Quest'estate mi hanno letto l'aura
+E ho perso ogni speranza
+Ho perso ogni speranza
+Quest'estate mi hanno letto l'aura
+E per curare l'ansia
+Ho preso una vacanza
+
+Tremo solo al pensiero
+Non lo nego, mm
+Centomila miglia a ovest
+Non so se ti rivedrò più
+Ayahuasca, il deserto è in fiore
+Guardo all'orizzonte con la testa sono altrove
+
+Quest'estate mi hanno letto l'aura
+E ho perso ogni speranza
+Ho perso ogni speranza
+Quest'estate mi hanno letto l'aura
+E per curare l'ansia
+Ho preso una vacanza
+
+Quest'estate mi hanno letto l'aura
+E ho perso ogni speranza
+Ho perso ogni speranza
+Quest'estate mi hanno letto l'aura
+E per curare l'ansia
+Ho preso una vacanza`,
+      },
+      {
+        year: 2020,
+        title: "Restare a guardarti",
+        file: "ragazzo-xso-restare-a-guardarti.mp3",
+        video: "https://youtu.be/NjWsCWxV1wM",
+        lyrics: `Restare a guardarti
+È ascoltare un vinile
+Una natura morta
+Piena di castagne e foglie
+Quando poi finisce 
+Non distingui vita e morte
+Vino dentro al tuo calice
+
+Sei la sola voce che non rubi al silenzio la sua malinconia
+Più lieve di un respiro in mezzo a un uragano
+Dimmi come vuoi che sia
+Fammi come vuoi tu
+Dimmi come vuoi che sia
+Fammi come vuoi
+Sei la prima luce che non si sia nascosta
+La spia di una TV
+In faccia a quella notte che la divorava
+Dimmi come vuoi che sia
+Fammi come vuoi tu
+Dimmi come vuoi che sia
+Fammi come vuoi
+
+Restare a guardarti
+È ascoltare un vinile
+È una pagina strappata 
+E letta in un cortile
+Fa' ch'io possa sentire
+Il tuo cuore che batte
+La tua mano tremare
+La tua bocca che ride
+
+Fammi guardare i tuoi occhi
+Finché ricordi
+Ho smesso di chiedere
+Ma tu cosa vuoi da me?
+Danzo come la polvere
+Sì sì, vorrei parlarti
+Passare sopra i rimpianti
+Unirmi alla voce degli altri
+Scrivere come va avanti
+Con te
+Umoja uliye
+Con te
+Umoja uliye
+
+Sei la porta socchiusa di un appartamento
+Non è grande ma c'è tutto
+Un letto, un tetto e un thermos
+Dimmi come vuoi che sia
+Fammi come vuoi tu
+Dimmi come vuoi che sia
+Fammi come vuoi
+La luce dalla finestra si accende da sola
+Si fanno le sei, si affaccia l'aurora
+Le note su quella chitarra non hanno più un nome
+Respirano un po', rincorrono un sosia
+
+Restare a guardarti
+È ascoltare un vinile
+È una pagina strappata 
+E letta in un cortile
+Fa' ch'io possa sentire
+Il tuo cuore che batte
+La tua mano tremare
+La tua bocca che ride
+
+Fammi guardare i tuoi occhi
+Fino a che ricordi
+Ho smesso di chiedere
+Ma tu cosa vuoi da me?
+Danzo come la polvere
+Sì sì, vorrei parlarti
+Passare sopra i rimpianti
+Unirmi alla voce degli altri
+Scrivere come va avanti
+Con te
+Umoja uliye
+Con te
+Umoja uliye`,
+      },
+      {
+        year: 2020,
+        title: "TMBV",
+        file: "ragazzo-xso-tmbv.mp3",
+        lyrics: `Ti mando un bacio al volo
+Anche se non vuoi sentire ragioni
+Anche se mi odi
+Il tempo è troppo poco
+Per rimanere soli
+Ti mando un bacio al volo
+E non m'importa niente se
+Mi tratti di nuovo da scemo
+A volte ci casco davvero
+Non sono uno di quelli che legge il pensiero
+Devo imparare a distrarmi di meno
+Scusami se non ti ho presa sul serio
+
+Io non tengo il broncio ma poi
+Cresce la distanza fra noi
+Sono quasi tutte le cose che adesso non vuoi
+Io non tengo il broncio ma poi
+Cresce la distanza fra noi
+Sono quasi tutte le cose che adesso non vuoi
+
+Ti mando un bacio al volo
+Anche se non vuoi sentire ragioni
+Anche se mi odi
+Il tempo è troppo poco
+Per rimanere soli
+Ti mando un bacio al volo
+Ma poi mi pento sempre
+Vorrei cominciare da zero
+Se mi conoscessi di meno
+Non dovrei essere così sincero
+Alle parole non do il giusto peso
+Ti ho detto che ti odio, ma non ci credevo
+
+Io non tengo il broncio ma poi
+Cresce la distanza fra noi
+Sono quasi tutte le cose che adesso non vuoi
+Io non tengo il broncio ma poi
+Cresce la distanza fra noi
+Sono quasi tutte le cose che adesso non vuoi
+
+Non so cosa voglio lo ammetto
+Non sono lo stesso di un tempo
+Dentro sento freddo ma ho un thermos
+Vorrei non finisse l'inverno
+Un pomeriggio al palazzetto
+Lame sul ghiaccio lame sul mio petto
+Dietro di me si sta sciogliendo
+Io vorrei abbracciarti ma cado da fermo
+E ormai non m'importa anche se mi fa male
+La paura è un miracolo per chi la sa affrontare
+
+Io non tengo il broncio ma poi
+Cresce la distanza fra noi
+Sono quasi tutte le cose che adesso non vuoi
+Io non tengo il broncio ma poi poi
+Cresce la distanza fra noi
+Sono quasi tutte le cose che adesso non vuoi
+che adesso non vuoi
+che adesso non vuoi
+che adesso non vuoi
+che adesso non vuoi`,
+      },
+      {
+        year: 2020,
+        title: "Suzie, Do You Copy?",
+        file: "ragazzo-xso-suzie-do-you-copy.mp3",
+        lyrics: `Ti chiamo da un altro pianeta
+Tu non rispondi mai
+Suzie, do you copy?
+Ricordi i nostri giochi
+Di quando non avevamo ancora pregiudizi
+Ci cercavamo senza indizi
+E sognavamo ad occhi aperti un altro cielo
+
+Ci amavamo davvero
+Ci amavamo davvero
+Ci amavamo davvero
+Ci amavamo davvero
+
+Suzie potrei tagliare quei ricordi
+Con un coltello, mi manchi pure adesso
+Suzie non mi guardo più allo specchio
+In sti giorni sono un cesso
+Se non ci vediamo è meglio
+Ma se poi ci ripenso
+
+Ci amavamo davvero
+Ci amavamo davvero
+Ci amavamo davvero
+Ci amavamo davvero`,
+      },
+      {
+        year: 2020,
+        title: "Triste",
+        file: "ragazzo-xso-triste.mp3",
+        lyrics: `Sono triste fino a prova contraria
+E la prova sei tu che senza guardarmi mi stringi la mano
+Così forte da farmi male
+Che non riesco a respirare
+Con il cuore che batte da solo
+All'impazzata
+Come non fosse più il mio
+Come se il tuo l'avesse a un tratto rimpiazzato
+
+E adesso non andartene
+Non mi lasciare
+
+Ti disegno sull'iPad 
+Mi rigiro nel letto col mal di pancia
+Dentro alla mia stanza
+Ho aperto la finestra ma mi manca l'aria
+Che ne sai dell'ansia
+Che ne sai dell'ansia
+
+Non andartene
+Non mi lasciare`,
+      },
+      {
+        year: 2020,
+        title: "Buio totale",
+        file: "ragazzo-xso-buio-totale.mp3",
+        lyrics: `Na nana nana na na nana na
+
+Già pensavo alla mia foto in prima pagina
+Ragazzo perso tra le mura di casa
+Riordinava i suoi ricordi in una scatola
+Con sopra scritto fragile se sei sensibile
+Un angelo di pezza con il ciuffo e il cuore a metà
+Molecole del tuo profumo nell'aria
+Ti ricordi correvamo nell'oscurità
+Poi tu mi hai preso per mano
+
+Ti va di ballare? Io vorrei restare
+Come da bambino di fronte a un'eclissi solare
+Una notte d'estate, noi graffi e cicale
+Ti abbraccio ed il mondo scompare
+Mi manca il tuo buio totale
+È una bella giornata ma non ce n'è
+Sei qualcosa a cui non ci si può abituare
+Un fiore tra le pagine
+Mi manca il tuo buio totale
+È una bella giornata ma non ce n'è
+Sei qualcosa a cui non ci si può abituare
+
+Scusa se non faccio flex, non mi basta
+Io mi prendo quelle ali, tu il passamontagna
+Scusa se non faccio flex, non mi basta
+Io mi prendo quelle ali, tu il passamontagna
+
+Io so che sei vera soltanto perché non ti so immaginare
+Nella mia testa buio totale
+Dimmi che cosa vuol dire davvero amare
+Sei qualcosa che non pensavo nemmeno più io di aspettare
+Lo so che tardi, che te ne importa
+Non te ne andare
+Lo so che è tardi ma prima non sono riuscito a parlarti
+I soliti giochi di sguardi
+Siamo diversi se stiamo con gli altri
+L'ultima traccia poi torniamo a casa a piedi no
+Nelle nostre scarpe Globe
+
+Ti va di ballare? Io vorrei restare
+Come da bambino di fronte a un'eclissi solare
+Una notte d'estate, noi graffi e cicale
+Ti abbraccio ed il mondo scompare
+Mi manca il tuo buio totale
+È una bella giornata ma non ce n'è
+Sei qualcosa a cui non ci si può abituare
+Un fiore tra le pagine
+Mi manca il tuo buio totale
+È una bella giornata ma non ce n'è
+Sei qualcosa a cui non ci si può abituare
+
+Scusa se non faccio flex, non mi basta
+Io mi prendo quelle ali, tu il passamontagna
+Scusa se non faccio flex, non mi basta
+Io mi prendo quelle ali, tu il passamontagna
+
+Scusa se non faccio flex
+Mi manca il tuo buio totale
+Io mi prendo quelle ali, tu il passamontagna
+Scusa se non faccio flex
+Sei qualcosa a cui non ci si può abituare 
+Vedi che posso volare anche nella mia stanza
+Scusa se non faccio flex
+Mi manca il tuo buio totale
+Io mi prendo quelle ali, tu il passamontagna
+Scusa se non faccio flex, non mi basta
+Vedi che posso volare anche nella mia stanza`,
+      },
+      {
+        year: 2020,
+        title: "Emoboy",
+        file: "ragazzo-xso-emoboy.mp3",
+        lyrics: `Lost boy, Blu Perfetto
+È tuo il riflesso nel mio specchio
+Sei l'inferno, ma ti trucchi meglio
+Mi sembra di vederti adesso, okay
+
+Bianco o nero, pop killer, real emo
+Vedi come sto? Baby come fai?
+Headbang, su le mani, high five
+Ti ruba il cuore e poi ti dice bye bye
+
+La mia faccia su una fanzine, mica
+La tua faccia in una livestream, yeah
+Voglio più spleen, Baudelaire
+Piazza Berna, nuovo Midwest
+Entra nella gang
+
+E con un plettro ho toccato il cielo
+E ho graffiato le stelle
+Eri come la febbre
+Eri sotto la pelle
+
+Lui era un emoboy, lei tipo Emily
+La scuola, il set di un film
+Proteggimi dal mondo fuori
+Cerco al buio le tue mani
+
+Lui era un emoboy, lei tipo Emily
+La scuola, il set di un film
+Non è niente di speciale ma era vero
+E più fa male, più è sincero
+
+No grip, sono in aria, backflip
+Perdo sensi, ciocche viola dei tuoi capelli
+Siamo persi, sì, abitiamo altrove
+Sei la Skate Queen, baby, siamo il 2009, okay
+
+Ragazzi persi, è vero, siamo alla deriva
+Altri sette miliardi puntano alla cima
+Conti i graffi, i sassi che ti hanno tirato
+A testa bassa, stesse vans di prima
+
+E con un plettro ho toccato il cielo
+E ho graffiato le stelle
+Eri come la febbre
+Eri sotto la pelle
+
+Lui era un emoboy, lei tipo Emily
+La scuola, il set di un film
+Proteggimi dal mondo fuori
+Cerco al buio le tue mani
+
+Lui era un emoboy, lei tipo Emily
+La scuola, il set di un film
+Non è niente di speciale ma era vero
+E più fa male, più è sincero
+
+Ti aspetto dentro un anime
+Altrove, io e te
+
+Lui era un emoboy, lei tipo Emily
+La scuola, il set di un film
+Proteggimi dal mondo fuori
+Cerco al buio le tue mani
+
+Lui era un emoboy, lei tipo Emily
+La scuola, il set di un film
+Non è niente di speciale ma era vero
+E più fa male, più è sincero`,
+      },
+      {
+        year: 2020,
+        title: "Nanno",
+        file: "ragazzo-xso-nanno.mp3",
+        cover: "ragazzo-xso-nanno-cover.jpg",
+        lyrics: `Nanana yei
+Non è un gioco
+Jigsaw
+Nessun luogo
+Nanno
+Nanana oh
+Lost boy
+Emo idol
+Non cercarmi su Netlog
+
+Non ho scelto il mio nome
+Né quello che ho in tasca
+Ed in faccia portiamo una maschera
+Per tutti i miei compagni tu eri quella pazza
+Non mi sembra tu sia uscita mai da questa stanza
+Ho aperto le finestre che mi manca l'aria
+Ho ancora il tuo respiro sulla pelle
+La tua risata mi buca le tempie
+Ti chiedo scusa una volta per sempre
+
+Bless the fall, sono in aria, touché
+Danzi forte, poi mi strappi il cuore
+Tiro a sorte, non lo so il tuo nome
+Dammi solo un segno che sia amore
+
+Sul mio Nokia sei salvata con un cuore
+Ma sincero, non ricordavo neanche il tuo nome
+So che forse abbiamo fatto degli errori
+Ma mi sono sdebitato con dei fiori
+Mi sembrava solo un gioco
+Non volevo farti niente
+Se accadrà di nuovo
+Tu scusami adesso per sempre
+Tu scusami adesso per sempre
+Tu scusami adesso per sempre
+
+Dannato Karma
+Riportami indietro a quell'aula
+Cancella gli insulti su quella lavagna
+I segni sopra le sue braccia
+Dannato Karma
+Riportami là in quella stanza
+Asciuga le lacrime di lei che piange
+mentre nessuno la guarda
+
+Bless the fall, sono in aria, touché
+Danzi forte, poi mi strappi il cuore
+Tiro a sorte, non lo so il tuo nome
+Dammi solo un segno che sia amore
+
+Ho dei buchi quella sera poi com'era andata?
+Ci sarai rimasta male e sei tornata a casa
+Guarda lascia stare, io avevo un mal di testa da morire
+Non guardarmi male, tanto sai già come andrà a finire
+
+Bless the fall, sono in aria, touché
+Danzi forte, poi mi strappi il cuore
+Tiro a sorte, non lo so il tuo nome
+Dammi solo un segno che sia amore
+
+Bless the fall, sono in aria, touché
+Danzi forte, poi mi strappi il cuore
+Tiro a sorte, non lo so il tuo nome
+Dammi solo un segno che sia amore`,
+      },
+      // ——— 2021 ———
+      {
+        year: 2021,
+        title: "Addio",
+        file: "ragazzo-xso-addio.mp3",
+        lyrics: `Fammi un esempio di noi due
+Fammi un disegno
+Con il cielo azzurro
+In un mondo diverso
+Fammi volare via 
+Fammi volare
+Fammi volare via 
+Fammi volare
+
+Fammi un esempio di noi due
+Se fosse diverso
+Guardarci allo specchio
+E perderci dentro
+Fammi volare via 
+Fammi volare
+Fammi volare via 
+Fammi volare
+
+C'è un patto tra noi
+Nessuno ci dividerà mai
+Nemmeno la notte più buia
+
+C'è un patto tra noi
+Nessuno lo spezzerà
+Rimarremo appesi almeno per un filo
+
+Fammi un esempio di noi due
+Fammi un disegno
+Con il cielo azzurro
+In un mondo diverso
+Fammi volare via 
+Fammi volare
+Fammi volare via 
+Fammi volare
+
+Fammi un esempio di noi due
+Se fosse diverso
+Guardarci allo specchio
+E perderci dentro
+Fammi volare via 
+Fammi volare
+Fammi volare via 
+Fammi volare
+
+Neanche se ti mangiassi colmerei il mio vuoto
+Ma ho iniziato a crescere
+Ho anche imparato a rimanere solo
+Se c'è rumore non ti metto a fuoco
+
+Raccontami tutte le cose che hai fatto
+Mentre eravamo lontani
+Non c'è bellezza nell'essere uguali
+Mi dici a che serve sentirsi normali
+
+Fammi un esempio di noi due
+Fammi un disegno
+Con il cielo azzurro
+In un mondo diverso
+Fammi volare via 
+Fammi volare
+Fammi volare via 
+Fammi volare
+
+Fammi un esempio di noi due
+Se fosse diverso
+Guardarci allo specchio
+E perderci dentro
+Fammi volare via 
+Fammi volare
+Fammi volare via 
+Fammi volare
+
+Finché ci sei
+Finché ci sono anche io
+Dimentica un addio
+Dimentica un addio
+
+Fammi un esempio di noi due
+Fammi un disegno
+Con il cielo azzurro
+In un mondo diverso
+Fammi volare via 
+Fammi volare
+Fammi volare via 
+Fammi volare
+
+Fammi un esempio di noi due
+Se fosse diverso
+Guardarci allo specchio
+E perderci dentro
+Fammi volare via 
+Fammi volare
+Fammi volare via 
+Fammi volare
+
+Fammi un esempio di noi due
+Fammi un disegno
+Con il cielo azzurro
+In un mondo diverso
+Fammi volare via 
+Fammi volare
+Fammi volare via 
+Fammi volare
+
+Fammi un esempio di noi due
+Se fosse diverso
+Guardarci allo specchio
+E perderci dentro
+Fammi volare via 
+Fammi volare
+Fammi volare via 
+Fammi volare`,
+      },
+      {
+        year: 2021,
+        title: "Platino",
+        file: "ragazzo-xso-platino.mp3",
+        lyrics: `RXSO
+Honey dammi solo un giorno
+Marigold
+Così sembra che non ti conosco
+Platino
+Così il tempo non è acido
+Vado in sincrono con il tuo battito
+È ogni volta 
+è fantastica
+Sento la tua energia anche dall'altra stanza
+Tu come fai
+A tenermi a distanza
+O è colpa mia e del mio cuore di plastica
+
+Se vuoi rimani
+Se vuoi parliamo ancora per un po'
+E non rimani mai
+Io ti amo ma non penso che importi
+Né a me né a te (Né a me né a te)
+Io ti amo ma non penso che importi
+Né a me né a te (Né a me né a te)
+
+RXSO
+Honey dammi solo un giorno
+Marigold
+Così sembra che non ti conosco
+Platino
+Così il tempo non è acido
+Vado in sincrono con il tuo battito
+È ogni volta 
+è fantastica
+Sento la tua energia anche dall'altra stanza
+Tu come fai
+A tenermi a distanza
+O è colpa mia e del mio cuore di plastica
+
+Ho paura di non sentire più niente
+Neanche ciò che fa più male
+Sto correndo via da tutta questa gente
+Lascio dietro di me una strage
+Lo sai che ho paura di te
+Lo sai che ho paura di me
+Lo sai che ho paura di te
+Lo sai che ho paura di perderti e di perdere me
+
+Forse non ti conosco davvero
+Hai una schiera di angeli al seguito
+Noi come ci capiamo è un mistero
+Io sono un mostro e tu sei un alieno
+
+RXSO
+Honey dammi solo un giorno
+Marigold
+Così sembra che non ti conosco
+Platino
+Così il tempo non è acido
+Vado in sincrono con il tuo battito
+È ogni volta 
+è fantastica
+Sento la tua energia anche dall'altra stanza
+Tu come fai
+A tenermi a distanza
+O è colpa mia e del mio cuore di plastica`,
+      },
+      {
+        year: 2021,
+        title: "Close Your Eyes",
+        file: "ragazzo-xso-close-your-eyes.mp3",
+        video: "https://youtu.be/KwPGArom-bk",
+        lyrics: `(Close your eyes)
+La notte mi lascia agli spettri delle tue parole
+(Close your eyes)
+Ho perso la strada sì mentre correvo per cercare te
+(Close your eyes)
+La luce del parco mi calma come fossi a casa
+(Close your eyes)
+Non voglio scoprire che non sei tornata
+
+Piove sui tuoi occhi
+I tuoi respiri come bombe (pa pa)
+Persi in mezzo a tante persone
+Tu ricordati il mio nome
+
+Mi hai detto lasciami sola (no no no)
+Stringimi ancora (no no)
+Non piangere ancora
+Che ho già l'acqua alla gola
+ 
+(Vai col basso)
+
+Non cerco più delle risposte 
+Le mani in tasca, il tuo ricordo
+Non mi lascia, è vetro rotto
+È fumo in faccia
+
+Mi rimane la luna
+Mi richiami e poi nulla
+Sono in cima al tuo sguardo
+E mi manca l'aria
+
+(Close your eyes)
+La notte mi lascia agli spettri delle tue parole
+(Close your eyes)
+Ho perso la strada sì mentre correvo per cercare te
+(Close your eyes)
+La luce del parco mi calma come fossi a casa
+(Close your eyes)
+Non voglio scoprire che non sei tornata
+
+Corro nel buio e non torno indietro
+Oltre lo specchio è sempre sereno dai
+Vieni con me che accendiamo il cielo
+
+Va di male in peggio
+Salvami da me
+Sento un vuoto immenso
+Vorrei parlarti ma c'è troppo vento
+Sono un insetto e tu il mare d'inverno
+
+Non cerco più delle risposte 
+Le mani in tasca, il tuo ricordo
+Non mi lascia, è vetro rotto
+È fumo in faccia
+
+Mi rimane la luna
+Mi richiami e poi nulla
+Sono in cima al tuo sguardo
+E mi manca l'aria
+
+(Close your eyes)
+La notte mi lascia agli spettri delle tue parole
+(Close your eyes)
+Ho perso la strada sì mentre correvo per cercare te
+(Close your eyes)
+La luce del parco mi calma come fossi a casa
+(Close your eyes)
+Non voglio scoprire che non sei tornata
+
+Perso
+Non mi hai mai cercato
+Graffi sul petto dove hai scavato
+Sono più piccolo del mio passato
+Sono più piccolo del mio passato
+
+(Close your eyes)
+La notte mi lascia agli spettri delle tue parole
+(Close your eyes)
+Ho perso la strada sì mentre correvo per cercare te
+(Close your eyes)
+La luce del parco mi calma come fossi a casa
+(Close your eyes)
+Non voglio scoprire che non sei tornata`,
+      },
+      {
+        year: 2021,
+        title: "Destino",
+        file: "ragazzo-xso-destino.mp3",
+        lyrics: `Meri il destino non l'ha letto sulla mano,
+È scritto con l'inchiostro nel suo diario
+Il mondo lo cambiamo in due
+La notte parla di noi due
+Se chiudo gli occhi, siamo ancora in due
+
+Meri crede ancora nelle favole
+Lui è come pioggia sulla sua pelle
+La sua felpa è grande che ci si sta pure in due
+Lei è sempre la stessa
+Ma stanotte è ancora più bella
+Sei ancora più bella
+Sei ancora più bella
+Sei ancora più 
+Non hai voglia di smettere
+Più bella
+Sei ancora più bella
+Sei ancora più bella
+Sei ancora più
+Non hai voglia di smettere
+
+Sei il sole sulla mia faccia
+La crisi che non mi passa mai
+E ti sento gridare dentro la mia pancia
+Te lo vorrei dire ma ho paura di
+Mandare tutto all'aria
+Lascio che il tempo corra via
+Andrai per la tua strada
+Io non posso dirti che sei mia
+
+Meri crede ancora nelle favole
+Lui è come pioggia sulla sua pelle
+La sua felpa è grande che ci si sta pure in due
+Lei è sempre la stessa
+Ma stanotte è ancora più bella
+Sei ancora più bella
+Sei ancora più bella
+Sei ancora più 
+Non hai voglia di smettere
+Più bella
+Sei ancora più bella
+Sei ancora più bella
+Sei ancora più
+Non hai voglia di smettere
+Non hai voglia di smettere
+Non hai voglia di smettere
+Non hai voglia di smettere
+Non hai voglia di smettere
+Non hai voglia di smettere
+Non hai voglia di smettere
+Non hai voglia di smettere`,
+      },
+      {
+        year: 2021,
+        title: "Broken Doll",
+        file: "ragazzo-xso-broken-doll.mp3",
+        cover: "ragazzo-xso-broken-doll-cover.jpg",
+        lyrics: `Capelli rosa, bad bit (Bad bit)
+Lei lo chiama, lui che abbaia come Lessie
+(wof)
+Scarpe derby sui suoi denti (derby)
+Ti hanno vista come Nessie
+La tua ombra tra le foto di un iPhone
+Su 100 battaglie 100 KO
+Dammi tre parole
+Tuta, strada, boxe
+Se ti vuole non puoi dire no
+
+Lei è un'in-fighter
+Ye-yeh
+Spinge come al Piper
+Yeh
+In un lampo sei già a un passo da me
+
+Non ho più paura, daddy
+Nasty, nasty
+Non ho più paura, daddy
+Yah
+Nasty, nasty
+Non ho più paura, daddy
+
+Suicide spot
+Batti Just die (die)
+Sotto al mio vlog
+Ora piove ma ho messo gli shorts
+Ditemi, ditemi stop
+Mi guardi e non sai come sto
+Non mi riconosci
+Nel bene e nel male l'ho fatto per te
+Non te lo ricordi?
+L'hai scritto col sangue
+Costi quel costi
+
+Corri che ho già perso il controllo
+Taglia questi fili, balla broken doll
+Nessuno si fa male se vivo in un sogno
+Portami in spalle e mi addormenterò
+Io e te sempre insieme
+Trash challenge non teme
+Questa notte sopravviverò,
+che cosa credi?
+
+Tg parla di te
+Sorridi dal desk
+Con le tue catene
+Lo ammetto mi manca
+vederti cadere e per questo
+ti faccio cadere
+Comincia lo show
+Mi scrivi take it easy
+Non ho scuse ma occhi grandi
+Da doll
+Vero non è, falso non è
+Non so dove sto
+
+Soldi, sogni, so
+Giusto o sbagliato
+Ci penso da un po'
+Non credo che
+Ti perdonerò
+So almeno che
+
+Non ho più paura, daddy
+Nasty, nasty
+Non ho più paura, daddy
+Yah
+Nasty, nasty
+Non ho più paura, daddy
+
+Suicide spot
+Batti Just die (die)
+Sotto al mio vlog
+Ora piove ma ho messo gli shorts
+Ditemi, ditemi stop
+Mi guardi e non sai come sto
+Non mi riconosci
+Nel bene e nel male l'ho fatto per te
+Non te lo ricordi?
+L'hai scritto col sangue
+Costi quel costi
+
+Corri che ho già perso il controllo
+Taglia questi fili, balla broken doll
+Nessuno si fa male se vivo in un sogno
+Portami in spalle e mi addormenterò
+Io e te sempre insieme
+Trash challenge non teme
+Questa notte sopravviverò,
+che cosa credi?
+
+Tu mi sei corsa incontro
+Saranno i sensi di colpa o no
+Ma ora so, sì ora so
+Non sarò un'altra broken doll
+
+Tu mi sei corsa incontro
+Saranno i sensi di colpa o no
+Ma ora so, sì ora so
+Non sarò un'altra broken doll
+
+Corri che ho già perso il controllo
+Taglia questi fili, balla broken doll
+Nessuno si fa male se vivo in un sogno
+Portami in spalle e mi addormenterò
+Io e te sempre insieme
+Trash challenge non teme
+Questa notte sopravviverò,
+che cosa credi?`,
+      },
+      {
+        year: 2021,
+        title: "Crash Landing on You",
+        file: "ragazzo-xso-crash-landing-on-you.mp3",
+        lyrics: `(Saranghae)
+
+Spero che tu sia più forte di me
+Sia più grande di me
+Stia lontana da me
+Perché
+Tutte le volte che ho pianto
+E ti ho detto ti amo
+L'ho fatto soltanto per me
+
+Mi chiedo dove sei adesso
+Non ti ho più cercata
+Meritavi di meglio
+Di una foto mossa
+E di un'estate a caso
+Di mezza promessa,
+E di una stretta di mano
+
+Scusa ho nuove scuse
+Ho uno scudo nel cuore Love Alarm
+Ma se un giorno mi cerchi con la lancia
+Crash Landing on you
+Ho capito che ho paura di guardare giù
+
+Scusa ho nuove scuse
+Ho uno scudo nel cuore Love Alarm
+Ma se un giorno mi cerchi con la lancia
+Crash Landing on you
+Ho capito che ho paura di guardare giù
+
+Oh my girl
+Perché ridi di me
+Anche se non ci sto più
+Oh my girl
+È più forte di me
+Ma ce la farò
+
+È come stare dentro a un webtoon
+Coi daily pass
+Questa è un escape room
+E cerco la libertà
+La testa in aria per i drama
+E poi rimango qua
+Sarò leggero per davvero
+Ma nell'al di là
+
+Solo nel cielo ti parlerò
+Sarò leggero, tu mi dirai
+Dici sul serio, io non lo so
+Se fossi stato meno scemo
+Forse, boh
+
+(Saranghae)
+
+Scusa ho nuove scuse
+Ho uno scudo nel cuore Love Alarm
+Ma se un giorno mi cerchi con la lancia
+Crash Landing on you
+Ho capito che ho paura di guardare giù
+
+Scusa ho nuove scuse
+Ho uno scudo nel cuore Love Alarm
+Ma se un giorno mi cerchi con la lancia
+Crash Landing on you
+Ho capito che ho paura di guardare giù`,
+      },
+      {
+        year: 2021,
+        title: "La fine del mondo",
+        file: "ragazzo-xso-la-fine-del-mondo.mp3",
+        cover: "ragazzo-xso-la-fine-del-mondo-cover.jpg",
+        lyrics: `Aah-ah che fai con Shazam
+Dammi la mano, sugli occhi close-up
+Mi guardi: rewind
+Giuro se fosse per sempre
+Non morirei mai
+No, non morirei mai
+
+E gira il mondo ma è sempre lo stesso
+Nel nostro universo mai avuto due giorni uguali
+Ok, fuori va di male in peggio e intanto noi
+Knock, knock, knockin' on heaven's door
+A ogni respiro moriamo un po'
+
+Ma che c'è di male?
+Come ti aspettavi che potesse andare?
+Due ragazzi persi, fame di arrivare
+Dove non ci sono scale
+Dai, se è l'ultima danza, dobbiamo danzare
+
+Sto vivendo per sempre
+Sto girando, c'ho il mal di mare
+Stai giocando con me
+Tutti gli altri ci guardano male
+Sto vivendo per sempre
+Sto girando, c'ho il mal di mare
+Se questa è la fine del mondo non piangere
+
+Ché siamo due angeli in un privé
+Non abbiamo niente da perdere
+Se ci guardo adesso come potrei credere
+Che un giorno saremo polvere
+
+Sbalzi d'umore, stanotte faccio rumore
+Fino a che il cuore esplode, fuori piove
+Che poi staremo zitti con la testa altrove
+E ci verranno a cercare, e chi si muove?
+
+Ma se non ti sta bene ce ne andiamo al mare
+Sotto al temporale
+Ma se non ti sta bene ce ne andiamo al mare
+Sotto al temporale
+
+Sto vivendo per sempre
+Sto girando, c'ho il mal di mare
+Stai giocando con me
+Tutti gli altri ci guardano male
+Sto vivendo per sempre
+Sto girando, c'ho il mal di mare
+Se questa è la fine del mondo non piangere
+
+Ché siamo due angeli in un privé
+Non abbiamo niente da perdere
+Se ci guardo adesso come potrei credere
+Che un giorno saremo polvere
+
+Ehi, non mi chiedere dove, come e quando
+Ho fatto un viaggio nell'isola che non c'è
+Lontano da tutto, lontano da tutti,
+C'eri solo tu con me
+
+Mani in alto
+C'è solo ghiaccio intorno a me nel raggio di dieci chilometri
+Forse è presto per ritornare
+Se questa è la fine del mondo non piangere
+
+Ché siamo due angeli in un privé
+Non abbiamo niente da perdere
+Se ci guardo adesso come potrei credere
+Che un giorno saremo polvere
+
+Ché siamo due angeli in un privé
+Non abbiamo niente da perdere
+Se ci guardo adesso come potrei credere
+Che un giorno saremo polvere`,
+      },
+      {
+        year: 2021,
+        title: "Pan",
+        file: "ragazzo-xso-pan.mp3",
+        doodle: "luna",
+        cover: "ragazzo-xso-pan-cover.jpg",
+        lyrics: `Ho sbagliato tutto
+Ho sbagliato testo
+Lo ricordo come fosse adesso
+Il tuo fiato addosso
+Ma era un altro pezzo
+Di me
+Ora se parla, parla per sé
+Ho perso l'ombra dentro a quella stanza
+Non c'è più Wendy, ci sei te
+Non so nemmeno bene se mi manca
+Io scrivo di te, parlo di te
+Per non uscire ma
+Io scrivo di te, parlo di te
+
+Ti ho stretta fino a sparire
+Non ho saputo piangere nemmeno
+La vista è bella ma non sei qui con me
+Le onde coprono i ricordi
+Ma anche la parola fine
+
+Gocce sul mio diario
+Ho aperto una pagina a caso
+E disegno il tuo profilo migliore
+Anima senza una voce
+Più vorrei lasciarti e più ti penso
+E passa la mia vita in un momento
+Sei stata la mia prigione, la mia luce, l'amore
+Amore, amore, amore e poi ti perdo
+Amore volavamo contro il tempo
+Amore, amore, amore e poi ti perdo
+Amore ballavamo fuori tempo
+
+Ti ho stretta fino a sparire
+Non ho saputo piangere nemmeno
+La vista è bella ma non sei qui con me
+Le onde coprono i ricordi
+Ma anche la parola fine
+
+Pan
+Spari
+Occhio che ti fanno
+Fuori
+
+Bang
+Corri
+Qui finisce male
+
+Let's go
+Ho paura sì tremano le gambe
+Per quello che pensi 
+Il modo in cui mi parli
+Vedo il mondo come lo vedevo a 16 anni
+Lo creo nella mia testa, lo tengo nei miei palmi
+E sento ancora cuore a sincrono coi tuoi battiti
+Le tue gambe superare le vertigini
+Angeli e demoni parlarmi dei miei sbagli
+E strapparmi l'anima in due parti
+Risate o pianti, da che lato guardi?
+
+Ti ho stretta fino a sparire
+Non ho saputo piangere nemmeno
+La vista è bella ma non sei qui con me
+Le onde coprono i ricordi
+Ma anche la parola fine
+
+Pan
+Spari
+Occhio che ti fanno
+Fuori
+
+Bang
+Corri
+Qui finisce male`,
+      },
+      {
+        year: 2021,
+        title: "Quaggiu",
+        file: "ragazzo-xso-quaggiu.mp3",
+        lyrics: `Soffi
+Tra le mie mani fredde
+Non cerco riparo
+Se non in te
+Non in te
+Non in te
+
+Ombre
+Tra le tue dita in fiamme
+E un vago profumo
+Di anice
+Anice
+Anice
+
+Con il cielo negli occhi
+Ti volti a guardare quaggiù
+Con il cielo negli occhi
+Ti volti a guardare quaggiù
+
+Scavi
+La mia forma dai sassi
+Non sono mai stato 
+Più debole
+Debole
+Debole
+
+Pioggia
+Copre il segno dei passi
+Quello che cercate
+qui non è più
+Non è più
+Non è più
+
+Con il cielo negli occhi
+Ti volti a guardare quaggiù
+Con il cielo negli occhi
+Ti volti a guardare quaggiù
+
+E adesso che corro sulle mie gambe ormai
+Ti cerco fino all'ultimo giorno
+Fino all'ultima ora
+E adesso che che conto sulle mie forze ormai
+Ti aspetto fino all'ultimo giorno
+Fino all'ultima ora
+Ti aspetto fino all'ultimo giorno
+Fino all'ultima ora
+Fino all'ultimo giorno
+Fino all'ultima ora`,
+      },
+      { year: 2021, title: "San Paolo Freestyle (prod. BMBNO)", file: "ragazzo-xso-san-paolo-freestyle-prod-bmbno.mp3" },
+      {
+        year: 2021,
+        title: "Spettacolare",
+        file: "ragazzo-xso-spettacolare.mp3",
+        lyrics: `Ragazzo perso
+Chiudi gli occhi
+Tieni il tempo
+Tre rintocchi
+Molla tutto pure i soldi
+Molla tutto pure i sogni
+Vieni con me
+
+Giro gli occhi a 360
+Conto sulle dita quello che mi avanza
+Tocco il fondo
+Giuro non mi manca
+Stare bene
+Se vuol dire nella massa, gang gang
+
+No non torno a casa
+Seguo una stella, frate' sto per aria
+Mica per la fama, certo, come no
+Ye eh eh eh
+
+Chiamami sensei
+No pain no gain
+Troppi stili, sembra un medley
+Troppo stile, ne ho da vendere
+Mi metto in gioco
+Guarda il gameplay
+
+No no
+No name
+Sono niente, sono pure un brand
+Don't follow me
+Don't follow me
+Non credo che ti piaccia perdere
+
+Ma se sorridi di nascosto canta na-na-na
+Se hai già corso a più non posso na-na-na
+Se quel vuoto sembra un mostro canta na-na-na
+Se hai paura che sia un sogno na-na-na
+
+Fuori da Meri
+Fuori di me
+Non ne faccio a meno di te
+Non ne faccio a meno di te
+Non ne faccio a meno di perdere
+E sarà spettacolare
+Non voglio perdere la fine
+Voi zitti intorno
+Non sembrerà reale
+È tutto intorno a noi
+Sarà spettacolare
+Sarà spettacolare`,
+      },
+      // ——— 2022 ———
+      {
+        year: 2022,
+        title: "TA-DA",
+        file: "ragazzo-xso-ta-da.mp3",
+        cover: "ragazzo-xso-ta-da-cover.jpg",
+        lyrics: `Nana siamo mille in una vi-
+TA-DA siamo sempre stati qui
+Tana per gli occhi tuoi
+Davanti agli occhi miei 
+Nana siamo mille cose ma
+Rimangono sempre e solo quelle parti di me
+Che volevo nascondere
+E quelle parti di te che mi fanno male
+
+Baby sai che brilli tra la folla ah
+Sei una bomba che non scoppia
+Un silenzio che ti assorda
+Dillo con me
+Eh venerdì paranoia
+Come fai
+A lasciarmi, siamo briciole
+Dimmi cosa ne hai fatto di me
+
+C'hai un modo di fare bossy
+Ma solo con me
+Sparisci se ti annoi o sei fuori di te
+Non sai quello che vuoi o sei fuori di testa
+Non mi lasci altra scelta
+Ho un po' paura a chiederlo
+Ma come va?
+Ti ha inghiottito viva la città
+Alla fine sei saltata in aria
+
+Nana siamo mille in una vi-
+TA-DA siamo sempre stati qui
+Tana per gli occhi tuoi
+Davanti agli occhi miei 
+Nana siamo mille cose ma
+Rimangono sempre e solo quelle parti di me
+Che volevo nascondere
+E quelle parti di te che mi fanno male
+
+Non è un comedy, yeah
+Questa strada all'alba mi ricorda un film, Ah
+Sto volando sopra la mia bici
+Sto imparando sono all'a bi ci
+Mi hai insegnato che quando sono solo
+Non sono solo
+E che il silenzio dura poco
+Che alla fine il bello era abbracciare il vuoto
+Lost Boy fammi GG
+
+Guarda come sto questa felpa XL 
+Non mi copre neanche un po'
+Sotto i miei capelli brillano le stelle
+Si sciolgono sulla mia pelle
+E senti brividi scivoli più in giù
+Scivoli più giù
+
+Nana siamo mille in una vi-
+TA-DA siamo sempre stati qui
+Tana per gli occhi tuoi
+Davanti agli occhi miei 
+Nana siamo mille cose ma
+Rimangono sempre e solo quelle parti di me
+Che volevo nascondere
+E quelle parti di te che mi fanno male
+
+Guardami
+Non solo parole
+Salvami
+Fuori copione
+Guardami nell'anima
+Guardami salvami
+
+Guardami
+Non solo parole
+Salvami
+Fuori copione
+Guardami nell'anima
+Guardami salvami
+
+Nana siamo mille in una vi-
+TA-DA siamo sempre stati qui
+Tana per gli occhi tuoi
+Davanti agli occhi miei 
+Nana siamo mille cose ma
+Rimangono sempre e solo quelle parti di me
+Che volevo nascondere
+E quelle parti di te che mi fanno male (2 v.)`,
+      },
+      {
+        year: 2022,
+        title: "Vibe",
+        file: "ragazzo-xso-vibe.mp3",
+        cover: "ragazzo-xso-vibe-cover.jpg",
+        lyrics: `Ragazzo perso ha uno specchio
+dentro alla sua cameretta
+E anche se la luce è spenta 
+Sa che là c'è il suo riflesso
+Non cerca più le risposte
+Dentro al suo cuore deserto
+Ed ha bruciato da tempo
+ogni suo fragile verso
+Già, senza un palco che si illumina
+Si leva il glitter con la manica
+Pioggia di like, è tutto qui
+E ora scalzo riordina i pezzi dell'anima
+
+Lei ancora col cuore chiuso nel cellophane
+Lui con quella ferita che non rigenera mai
+Per fortuna gli amici lo tiran fuori dai guai
+E di quell'amore rimane solo la vibe
+Solo la vibe
+Solo la vibe
+E di quell'amore rimane solo la vibe
+Solo la vibe
+Solo la vibe
+E di quell'amore rimane solo la vibe
+
+Giochiamo a chi piange più forte
+Sei bella come una cosplayer
+Non hai avuto voglia di correre
+Su quella collina una notte
+
+Y2K
+Vesti come una Bratz, ma sei
+Caduta dalle stelle come a San Lorenzo
+E mi hai lasciato solo con un cielo nero
+
+Lei ancora col cuore chiuso nel cellophane
+Lui con quella ferita che non rigenera mai
+Per fortuna gli amici lo tiran fuori dai guai
+E di quell'amore rimane solo la vibe
+Solo la vibe
+Solo la vibe
+E di quell'amore rimane solo la vibe
+Solo la vibe
+Solo la vibe
+E di quell'amore rimane solo la vibe
+
+Light Stick a forma di luna
+Bambi, cerca la sua noona
+Lui piange, ma non ricorda il motivo
+Quindi si alza alle 3 per scrivere il suo destino 
+
+Lei ancora col cuore chiuso nel cellophane
+Lui lui ferita che non si rigenera
+Per fortuna gli amici lo tiran fuori dai guai
+E di quell'amore rimane solo la vibe
+
+Lei ancora col cuore chiuso nel cellophane
+Lui lui ferita che non si rigenera
+Per fortuna gli amici lo tiran fuori dai guai
+E di quell'amore rimane solo la vibe`,
+      },
+      {
+        year: 2022,
+        title: "JBL",
+        file: "ragazzo-xso-jbl.mp3",
+        cover: "ragazzo-xso-jbl-cover.jpg",
+        lyrics: `Ok, ho inventato tutto, il tuo nome, il tuo volto
+Ed i silenzi e le parole ritagliati da un sogno 
+Per paura di sbagliare e capire che in fondo
+Sei sempre stata tu la cosa più importante per me
+E che scrivevo di te
+
+E che scrivevo di te
+Ho preso fiato una volta solamente per
+Capire che mi manca l'aria se non sto cantando
+Che vivo dei secondi che mi stai rubando 
+Di tutte quelle cose che riempi di te
+Di te di te di te
+Di tutte quelle cose che riempi di te
+Di te di te di te
+
+Che sei cute e violenta
+Come gli Happy Tree Friends
+I'm in love, I'm in danger
+Suona il mio JBL
+Non lasciarmi da solo
+Penso soltanto a te
+Tutto questo dolore
+Resta dentro di me
+
+Che sei cute e violenta
+Come gli Happy Tree Friends
+I'm in love, I'm in danger
+Suona il mio JBL
+Non lasciarmi da solo
+Penso soltanto a te
+Tutto questo dolore
+Resta dentro di me
+
+Ok, ho inventato tutto, il tuo nome, il tuo volto
+I silenzi e le parole ritagliati da un sogno 
+Per paura di sbagliare e capire che in fondo
+Sei sempre stata tu la cosa più importante per me
+E che scrivevo di te
+E che scrivevo di te
+Ho preso fiato una volta solamente per
+Capire che mi manca l'aria se non sto cantando
+Che vivo dei secondi che mi stai rubando 
+Di tutte quelle cose che riempi di te
+Di te di te di te
+Di tutte quelle cose che riempi di te
+Di te di te di te
+
+Il diario vuoto dal duemilaventi
+La voce rotta del mio JBL
+La luce accesa fino alle 3 AM
+Non si può dire ciò che non si sente 
+
+Ti sedevi accanto a me
+Ma io ero sempre distratto
+Anni luce accanto a te 
+Quando è cominciata è stato
+Tutto vero, tutto ve-
+tutto vano, tutto insieme
+Anni luce accanto a te
+Ma ora non sappiamo se era 
+Tutto vero, tutto vano, tutto insieme
+Non sappiamo se era 
+Tutto vero, tutto vano, tutto insieme
+Non lo diciamo ma
+
+Io scrivo ancora di te
+Io scrivo ancora di te
+Io scrivo ancora di te
+Io scrivo ancora di te
+Io scrivo ancora di te
+Io scrivo ancora di te
+Te`,
+      },
+      // ——— 2023 ———
+      {
+        year: 2023,
+        title: "Popcorn",
+        file: "ragazzo-xso-popcorn.mp3",
+        doodle: "stella",
+        cover: "ragazzo-xso-popcorn-cover.jpg",
+        lyrics: `RXSO alla deriva
+
+Cade la pioggia
+Non te la senti di tornare a casa
+T'immagini un film
+La camera fissa, i titoli di coda
+Stai in posa
+
+Dentro i tuoi occhi
+Un cielo gigante, ti fa stare bene 
+Nella tua testa 
+è tutto più grande
+Ne sei consapevole
+Ma fa paura
+
+Blu, ti giuro non piangerò più
+Volevo restare nel mood
+Domani non ci sarai più, ok?
+E spero che non accendano le luci ancora per un po'
+Fammi finire i miei popcorn
+
+Barcolli in centro come una zombie
+Il tuo riflesso nei camerini di H&M
+Compri endorfine ma non hai i soldi
+Quelli che hai appena speso al Mc
+A-ancora
+
+Fai quello che vuoi
+So che acqua passata ormai
+Quelli come voi noi non li capiamo ma
+Ci penso spesso, lo confesso
+Ci sono immerso, persino adesso
+Mi sembra di salire sopra un ring
+Nudo come un wrestler
+Svuoto la mia mente, sai
+Come uscire da qui?
+È una notte senza stelle
+Non vedo niente
+
+Blu, ti giuro non piangerò più
+Volevo restare nel mood
+Domani non ci sarai più, ok?
+E spero che non accendano le luci ancora per un po'
+Fammi finire i miei popcorn
+
+Lasci una poesia scorrerti sul palmo della mano
+Se ora fossi un aeroplano gireresti il mondo
+E piano piano
+Lasci andare le bugie
+Che ti accompagnano da giorni e giorni e giorni eh
+
+Blu, ti giuro non piangerò più
+Volevo restare nel mood
+Domani non ci sarai più, ok?
+E spero che non accendano le luci ancora per un po'
+Fammi finire i miei popcorn
+
+Blu, ti giuro non piangerò più
+Volevo restare nel mood
+Domani non ci sarai più, ok?
+E spero che non accendano le luci ancora per un po'
+Fammi finire i miei popcorn`,
+      },
+      {
+        year: 2023,
+        title: "Cancellare dai tuoi occhi",
+        file: "ragazzo-xso-cancellare-dai-tuoi-occhi.mp3",
+        cover: "ragazzo-xso-popcorn-cover.jpg",
+        lyrics: `Che ne sai, che ne sai
+Nei tuoi occhi c'è il veleno
+Non guardarmi come sai
+Come sai, come fossi il mondo intero
+Tutto il cielo, tutto il cielo piove su di me
+Resto appeso
+Sopra a un palco nero
+
+Sogno di gridare ma-ma
+Non mi esce una parola-la-la-la
+Mi serviva solo un la
+Ora faccio anche da sola
+Ho cambiato la mia fa-faccia
+Ho cambiato la mia taglia ma
+Non credo che mi basti
+Forse sbaglio qualche cosa
+
+Questa giacca come brilla
+Se la indosso non puoi farmi male
+Ma ti cerco più di prima perché fingo che ti faccia male
+Non mi serve la tua firma ma mi serve quella firma
+Ma ora guarda come brilla
+Ora guarda come brilla 
+
+Oggi morirò per cancellare dai tuoi occhi
+Quei ricordi che hai strappato dal mio corpo a morsi
+Tutto ciò in cui volevi riconoscermi
+Al suo posto c'è un sorriso che nemmeno più ricordi
+
+Conto le luci accese sabato sera
+Spero che ti faccia pe-
+Spero che ti faccia pena
+Glovo ha svoltato l'angolo
+Oggi ho ordinato per tre
+Mi sembra che i muri parlino
+Ho dei fantasmi ospiti a cena
+Sì ho dei fantasmi ospiti a cena
+Loro mi sanno ascoltare più di quanto tu abbia mai fatto 
+La luna piena disegna ombre
+Sul parquet e diventano statue di cera
+Di uscire di casa stasera no
+Non ne valeva la pena
+Non ne valeva la pena
+
+Ricordi 
+Fantasmi
+I tuoi occhi
+La luna
+
+Ricordi
+Fantasmi
+La notte
+La luna 
+
+Oggi morirò per cancellare dai tuoi occhi
+Quei ricordi che hai strappato dal mio corpo a morsi
+Tutto ciò in cui volevi riconoscermi
+Al suo posto c'è un sorriso che nemmeno più ricordi`,
+      },
+      {
+        year: 2023,
+        title: "Asako",
+        file: "ragazzo-xso-asako.mp3",
+        cover: "ragazzo-xso-popcorn-cover.jpg",
+        lyrics: `Dammi la tua parola 
+
+Tu mi fai toccare il fo-
+Fondo dell'oceano
+Lontano dal suono
+non so nuotare davvero
+Sirena
+Sirene bucano le onde
+E mi raggiungono tonde
+Come bolle
+Sei come un pianoforte col silenziatore
+Strappami dal coma anche per poche ore
+Dammi la tua parola
+
+Corro su un tappeto di malinconia
+Non capisco se il tuo sorriso è una bugia
+Ma ti penso spesso e per sentirmi vivo non lascio dire al cielo ciò che voglio mio mio
+
+Mio mio ciò che voglio mio mio
+Toglimi le mani dalla faccia
+Scelgo io io
+Mio mio ciò che voglio mio mio
+Toglimi le mani dalla faccia
+Scelgo io io
+
+Nel giro di una notte ti ho dimenticato è comodo, comodo
+Pensare fosse stato solo un sogno lucido, lucido, lucido
+Dove tutto quello che sentivi tu 
+Lo sentivo anch'io
+Tutto ciò che era tuo era mio
+(Tutto ciò che era tuo era mio)
+
+Luce negli occhi mi sveglio
+Sei stata il mio tormento
+Ci sono ancora dentro
+Asako 2 mi sveglio
+Mi sveglierò in futuro
+Vestito dei miei sbagli
+Riparto da 1
+Pensi lo capirei se fosse il giorno, l'ora
+Ti prego dammi un segno
+Qualche cosa
+Lo capirei se fosse il giorno, l'ora
+Lo capirei se fosse il giorno, l'ora
+Lo capirei se fosse il giorno, l'ora
+Lo capirei se fosse il giorno, l'ora
+
+Mi fai toccare il fo-
+Fondo dell'oceano
+non so nuotare davvero
+Sirena, sei
+Come un pianoforte col silenziatore
+Dammi la tua parola
+Dammi la tua parola`,
+      },
+      // ——— 2024 ———
+      {
+        year: 2024,
+        title: "Sorriso",
+        file: "ragazzo-xso-sorriso.mp3",
+        cover: "ragazzo-xso-sorriso-cover.jpg",
+        lyrics: `Mi sono chiuso nel mio armadio per suonare un po' 
+È personale 
+
+È un po' come ascoltare nelle conchiglie il mare
+Dalle finestre vorrei vedere lo spazio cosmico
+Disordinate stelle, ma tutte al loro posto
+Sei te o sono io a essere fuori posto 
+
+E cammino come un ossesso
+Nella mia stanza
+Penso al decollo
+Penso mi manca
+Conta il viaggio non la destinazazione
+Ma come faccio a trovarti se non conosco il tuo nome
+
+E ormai sai di me non importa più niente
+Prendo appunti, perdo il filo
+Come un'onda sulla spiaggia
+Che s'infrange all'infinito
+E ripartirò da te, e da quel tuo sorriso
+Ripartirò da te, che non ho mai capito 
+
+Vorrei far pace con me che con il mio disordine
+Di me non m'importa più niente,
+Non m'importa più niente
+Vorrei fare pace con te
+Scambiare i miei occhi con quelli di un angelo
+Perché, solo per un attimo
+Si bagnino come i tuoi
+
+Io non credo alle mie promesse
+I miei ideali hanno radici secche
+Forse Nietzsche capirebbe
+E nessuno lo pretende
+Ma devo vincere oppure perdere
+E devo farcela anche senza di te
+Non riesco a vivere mai il presente
+A volte credo di non sentire niente
+
+E ormai sai di me non importa più niente
+Prendo appunti, perdo il filo
+Come un'onda sulla spiaggia
+Che s'infrange all'infinito
+E ripartirò da te, e da quel tuo sorriso
+Ripartirò da te, che non ho mai capito 
+
+Vorrei far pace con me che con il mio disordine
+Di me non m'importa più niente,
+Non m'importa più niente
+Vorrei fare pace con te
+Scambiare i miei occhi con quelli di un angelo
+Perché, solo per un attimo
+Si bagnino come i tuoi`,
+      },
+      {
+        year: 2024,
+        title: "Temporale",
+        file: "ragazzo-xso-temporale.mp3",
+        doodle: "temporale",
+        cover: "ragazzo-xso-temporale-cover.jpg",
+        lyrics: `Che aria tira laggiù
+Me lo chiedo spesso
+Ti è andato il temporale di traverso?
+Hai scelto di cambiare?
+Sei ancora lo stesso?
+
+Per ora il tempo non ha tempo
+per noi due
+Anche se un fiore sta nascendo
+per noi due
+Dimmi se crescerà forte 
+Anche sotto la luna
+
+Se la primavera porterà fortuna 
+Tra mille pensieri è la nostra natura
+Aspetta ancora un secondo sì ma quanto dura?
+Conosco la teoria, non ne ho applicata nessuna 
+
+Il tempo non ha tempo per noi due
+Anche se corri forte senza cintura
+Indossi un'armatura contro la paura
+Di decidere
+E quelle strade, rettilinei
+Fino ai confini delle tue bugie
+Che bella vita senza ostacoli
+Solo io e te, solo io e te
+
+Che aria tira laggiù
+Me lo chiedo spesso
+Ti è andato il temporale di traverso?
+Hai scelto di cambiare?
+Sei ancora lo stesso?
+
+Per ora il tempo non ha tempo
+per noi due
+Anche se un fiore sta nascendo
+per noi due
+Dimmi se crescerà forte 
+Anche sotto la luna
+
+Se la primavera porterà fortuna 
+Tra mille pensieri è la nostra natura
+Aspetta ancora un secondo sì ma quanto dura?
+Conosco la teoria, non ne ho applicata nessuna
+
+Il tempo non ha tempo per noi due
+Ho divorato ogni momento
+Come fosse pane
+senza masticare
+E senza il sonno non ho pure il tempo di sognare 
+Mi chiedo cos'è l'amore 
+Ma cos'è
+Mi chiedo dov'è l'amore 
+Ma dov'è
+
+cos'è l'amore 
+Ma cos'è
+Mi chiedo dov'è l'amore 
+Ma dov'è
+Mi chiedo cos'è l'amore 
+Ma cos'è
+Mi chiedo dov'è l'amore 
+Ma dov'è
+
+Per ora il tempo non ha tempo
+per noi due
+Anche se un fiore sta nascendo
+per noi due
+Dimmi se crescerà forte 
+Anche sotto la luna
+Se la primavera porterà fortuna`,
+      },
+      // ——— 2025 ———
+      {
+        year: 2025,
+        title: "Sete di te",
+        file: "ragazzo-xso-sete-di-te.mp3",
+        cover: "ragazzo-xso-sete-di-te-cover.jpg",
+        lyrics: `Mi sono perso nella nebbia
+Mi manca già quella tempesta
+Che poi d'un tratto si arrestava
+Per riempire ogni silenzio 
+Della tua presenza 
+
+Gridare uomo in mare
+Bere il sale
+E poi farsi cullare
+Dalla luna piena
+E sbirciare
+mentre dici una preghiera 
+E sentire
+la pioggia sulla schiena 
+Riempire un'altra pagina intera solo per
+ricordarmi che restare è 
+il viaggio più difficile da fare
+
+Credo 
+Che ho sete di senso
+Ho sete di te e
+Che quando non viene il sereno
+Sei il cielo ma dentro di me (2 v.)
+
+Di quelle notti ho ancora fame
+Quelle domande che ormai è già domani
+Ho pianto per il tuo sorriso che scompare
+Ma sei tu che stringi forte le mie mani
+
+Gridare uomo in mare
+Bere il sale
+E poi farsi cullare
+Dalla luna piena
+E sbirciare
+mentre dici una preghiera 
+E sentire
+la pioggia sulla schiena 
+Riempire un'altra pagina intera solo per
+ricordarmi che restare è 
+il viaggio più difficile 
+
+Credo 
+Che ho sete di senso
+Ho sete di te e
+Che quando non viene il sereno
+Sei il cielo ma dentro di me (2 v.)
+
+Che dall'orizzonte mi vedi
+Più bello e più grande di me
+Che dall'orizzonte mi vedi
+Più piccolo e più fragile e che
+dall'orizzonte mi vedi
+Più grande e più fragile e-e-eeh
+
+Credo 
+Che ho sete di senso
+Ho sete di te e
+Che quando non viene il sereno
+Sei il cielo ma dentro di me (2 v.)`,
+      },
+    ];
+  </script>
+
+  <!-- ==========================================================
+       LOGICA DEL SITO
+       ========================================================== -->
+  <script>
+    (() => {
+      'use strict';
+
+      const CONFIG = {
+        tracksPath: 'assets/tracks/',
+        coversPath: 'assets/covers/',
+        yearImage: (year) => `assets/doodles/year-${year}.png`, // anni disegnati a mano
+        doodleImage: (name) => `assets/doodles/doodle-${name}.png`, // doodle accanto alle tracce
+        // Texture grunge di sfondo: una ogni ~textureEvery px di pagina
+        textures: ['texture-1.png', 'texture-2.png', 'texture-3.png', 'texture-4.png', 'texture-5.png'],
+        texturesPath: 'assets/doodles/',
+        textureEvery: 900,
+        numberPadding: 2,
+        artistName: 'Ragazzo xso',
+        restartThreshold: 3, // secondi: oltre questa soglia "Precedente" riavvia il brano
+        coverTilt: { min: 1, max: 3 }, // rotazione cover in gradi (effetto "figurina"); max: 0 per disattivare
+      };
+
+      const ICONS = {
+        play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>',
+        pause: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>',
+      };
+
+      const MODE_LABELS = {
+        order: 'In ordine',
+        shuffle: 'Casuale',
+      };
+
+      /* ----------------------------------------------------------
+         1. PREPARAZIONE DATI
+         Ordinamento cronologico stabile (anno, poi posizione
+         nell'elenco) e numerazione progressiva: la traccia più
+         vecchia è la n. 1, la più recente ha il numero più alto.
+         ---------------------------------------------------------- */
+      function prepareTracks(rawTracks) {
+        return rawTracks
+          .map((track, position) => ({ ...track, position }))
+          .filter((track) => {
+            const isValid = Number.isInteger(track.year) && track.title && track.file;
+            if (!isValid) console.warn('[Ragazzo xso] Traccia ignorata, dati incompleti:', track);
+            return isValid;
+          })
+          .sort((a, b) => a.year - b.year || a.position - b.position)
+          .map((track, index) => ({
+            ...track,
+            number: index + 1,
+            label: `${String(index + 1).padStart(CONFIG.numberPadding, '0')}.`,
+            src: CONFIG.tracksPath + track.file,
+            coverSrc: track.cover ? CONFIG.coversPath + track.cover : null,
+            doodle: normalizeDoodle(track.doodle, track.file),
+            lyrics: track.lyrics ? track.lyrics.trim() : '',
+          }));
+      }
+
+      /* Numero pseudo-casuale 0–1 stabile, ricavato da una stringa
+         (FNV-1a + rimescolamento finale) */
+      function stableRandom(key) {
+        let hash = 2166136261;
+        for (const char of String(key)) {
+          hash ^= char.codePointAt(0);
+          hash = Math.imul(hash, 16777619);
+        }
+        hash ^= hash >>> 16;
+        hash = Math.imul(hash, 0x85ebca6b);
+        hash ^= hash >>> 13;
+        hash = Math.imul(hash, 0xc2b2ae35);
+        hash ^= hash >>> 16;
+        return (hash >>> 0) / 4294967295;
+      }
+
+      /* Doodle della traccia: accetta "nome" oppure { name, x, y, rotate }.
+         I valori mancanti sono generati in modo stabile per ogni brano. */
+      function normalizeDoodle(doodle, key) {
+        if (!doodle) return null;
+        const spec = typeof doodle === 'string' ? { name: doodle } : doodle;
+        if (!spec.name) return null;
+        const r = (salt) => stableRandom(`${salt}:${key}`);
+        return {
+          src: CONFIG.doodleImage(spec.name),
+          x: spec.x ?? null,                                // null = assegnata da layoutDoodles()
+          y: spec.y ?? Math.round(-12 + r('y') * 12),       // -12–0 px
+          rotate: spec.rotate ?? Math.round(-12 + r('r') * 24),
+        };
+      }
+
+      /* Posizione orizzontale dei doodle: la riga è divisa in tre
+         "colonne" e due doodle consecutivi (nell'ordine dell'elenco)
+         non cadono mai nella stessa, così risultano sfalsati. La scelta
+         è casuale ma stabile; una x indicata a mano viene rispettata. */
+      const DOODLE_ZONES = [[30, 42], [49, 61], [68, 80]]; // % della riga
+
+      function layoutDoodles(listOrder) {
+        const zoneOf = (x) => DOODLE_ZONES.findIndex(([a, b]) => x >= a - 4 && x <= b + 4);
+        let prevZone = -1;
+        listOrder.forEach((track) => {
+          const doodle = track.doodle;
+          if (!doodle) return;
+          if (doodle.x === null) {
+            const options = DOODLE_ZONES.map((_, i) => i).filter((i) => i !== prevZone);
+            const zone = options[Math.floor(stableRandom(`zone:${track.file}`) * options.length)];
+            const [a, b] = DOODLE_ZONES[zone];
+            doodle.x = Math.round(a + stableRandom(`x:${track.file}`) * (b - a));
+            prevZone = zone;
+          } else {
+            prevZone = zoneOf(doodle.x);
+          }
+        });
+      }
+
+      /* Raggruppa per anno, in ordine decrescente (più recente prima) */
+      function groupByYearDesc(tracks) {
+        const groups = new Map();
+        tracks.forEach((track) => {
+          if (!groups.has(track.year)) groups.set(track.year, []);
+          groups.get(track.year).push(track);
+        });
+        return groups;
+      }
+
+      /* Fisher–Yates: restituisce una copia mescolata */
+      function shuffle(list) {
+        const copy = [...list];
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      }
+
+      function formatTime(seconds) {
+        if (!Number.isFinite(seconds)) return '0:00';
+        const s = Math.floor(seconds);
+        return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+      }
+
+      /* Rotazione "figurina" della cover: casuale ma stabile per ogni
+         brano (derivata dal nome file), così resta uguale a ogni visita.
+         Valore assoluto tra coverTilt.min e coverTilt.max, verso casuale. */
+      function coverTiltFor(key) {
+        const { min, max } = CONFIG.coverTilt;
+        if (!max) return 0;
+        let hash = 2166136261; // FNV-1a
+        for (const char of key) {
+          hash ^= char.codePointAt(0);
+          hash = Math.imul(hash, 16777619);
+        }
+        const r = (hash >>> 0) / 4294967295;       // 0–1
+        const sign = r < 0.5 ? -1 : 1;
+        const amount = min + ((r * 2) % 1) * (max - min);
+        return Math.round(sign * amount * 10) / 10;
+      }
+
+      /* ----------------------------------------------------------
+         2. PLAYER CENTRALIZZATO
+         Un unico elemento audio per tutto il sito e una coda di
+         riproduzione. Al termine di un brano parte il successivo:
+         - modalità "order":   segue l'ordine dell'elenco e si
+                               ferma dopo l'ultimo brano;
+         - modalità "shuffle": ordine casuale, rimescola a fine giro.
+         L'interfaccia si aggiorna ascoltando gli eventi del player.
+         ---------------------------------------------------------- */
+      function createPlayer() {
+        const audio = new Audio();
+        audio.preload = 'none';
+
+        let queue = [];
+        let index = -1;
+        let mode = 'order';
+        let pendingSeek = null; // posizione (0–1) da applicare appena noti i metadati
+        const listeners = new Set();
+
+        const getState = () => ({
+          track: queue[index] ?? null,
+          mode,
+          isPlaying: !audio.paused,
+          currentTime: audio.currentTime,
+          duration: Number.isFinite(audio.duration) ? audio.duration : 0,
+        });
+
+        const emit = (type) => {
+          const state = getState();
+          listeners.forEach((listener) => listener(type, state));
+        };
+
+        function load(newIndex) {
+          index = newIndex;
+          audio.src = queue[index].src;
+          emit('trackchange');
+        }
+
+        function play() {
+          audio.play().catch((err) => {
+            if (err.name !== 'AbortError') console.warn('[Ragazzo xso] Riproduzione non riuscita:', err);
+          });
+        }
+
+        audio.addEventListener('loadedmetadata', () => {
+          if (pendingSeek !== null) {
+            audio.currentTime = pendingSeek * audio.duration;
+            pendingSeek = null;
+          }
+          emit('timeupdate');
+        });
+        audio.addEventListener('play', () => emit('statechange'));
+        audio.addEventListener('pause', () => emit('statechange'));
+        audio.addEventListener('timeupdate', () => emit('timeupdate'));
+        audio.addEventListener('ended', () => {
+          const isLast = index === queue.length - 1;
+          if (!isLast) {
+            load(index + 1);
+            play();
+          } else if (mode === 'shuffle') {
+            queue = shuffle(queue);
+            load(0);
+            play();
+          }
+          // modalità "order": fine dell'archivio, il player resta in pausa
+        });
+
+        return {
+          on(listener) {
+            listeners.add(listener);
+          },
+          getState,
+          /* Avvia una nuova coda dal brano indicato */
+          playQueue(newQueue, startIndex = 0, newMode = 'order', seekRatio = null) {
+            if (!newQueue.length) return;
+            queue = [...newQueue];
+            mode = newMode;
+            pendingSeek = seekRatio;
+            load(startIndex);
+            play();
+          },
+          toggle() {
+            if (index === -1) return;
+            if (audio.paused) play();
+            else audio.pause();
+          },
+          next() {
+            if (!queue.length) return;
+            load((index + 1) % queue.length);
+            play();
+          },
+          prev() {
+            if (!queue.length) return;
+            if (audio.currentTime > CONFIG.restartThreshold) {
+              audio.currentTime = 0;
+              return;
+            }
+            load((index - 1 + queue.length) % queue.length);
+            play();
+          },
+          seek(ratio) {
+            if (audio.duration) audio.currentTime = ratio * audio.duration;
+          },
+          stop() {
+            audio.pause();
+            audio.removeAttribute('src');
+            audio.load();
+            queue = [];
+            index = -1;
+            pendingSeek = null;
+            emit('trackchange');
+          },
+        };
+      }
+
+      const player = createPlayer();
+
+      /* ----------------------------------------------------------
+         3. RENDER TRACCE
+         ---------------------------------------------------------- */
+      const trackTemplate = document.getElementById('track-template');
+      const yearTemplate = document.getElementById('year-group-template');
+      const trackRows = new Map(); // numero traccia -> { playBtn, timeline }
+
+      function setPlayIcon(button, isPlaying) {
+        button.innerHTML = isPlaying ? ICONS.pause : ICONS.play;
+        button.setAttribute('aria-label', isPlaying ? 'Pausa' : 'Play');
+      }
+
+      function renderTrack(track, listOrder) {
+        const item = trackTemplate.content.firstElementChild.cloneNode(true);
+        const $ = (selector) => item.querySelector(selector);
+
+        item.dataset.trackNumber = track.number;
+        item.value = track.number;
+
+        // Titolo e numerazione
+        $('.track-number').textContent = track.label;
+        $('.track-name').textContent = track.title;
+
+        // Cover (miniatura cliccabile) — solo se presente
+        if (track.coverSrc) {
+          const thumbBtn = $('.track-thumb-btn');
+          const thumb = $('.track-thumb');
+          thumb.src = track.coverSrc;
+          thumb.alt = `Cover di ${track.title}`;
+          const tilt = coverTiltFor(track.file);
+          thumbBtn.style.setProperty('--tilt', `${tilt}deg`);
+          thumbBtn.setAttribute('aria-label', `Apri la cover di ${track.title}`);
+          thumbBtn.addEventListener('click', () => openCoverModal(track.coverSrc, thumb.alt, tilt));
+          thumbBtn.hidden = false;
+        } else {
+          $('.track-thumb-btn').remove();
+        }
+
+        // Doodle accanto al titolo — solo se presente
+        if (track.doodle) {
+          const doodle = new Image();
+          doodle.className = 'track-doodle';
+          doodle.src = track.doodle.src;
+          doodle.alt = '';
+          doodle.loading = 'lazy';
+          doodle.decoding = 'async';
+          doodle.style.setProperty('--x', `${track.doodle.x}%`);
+          // Su schermi stretti le colonne si stringono nella metà destra (62–88%)
+          doodle.style.setProperty('--x-narrow', `${Math.round(62 + ((track.doodle.x - 30) / 50) * 26)}%`);
+          doodle.style.setProperty('--y', `${track.doodle.y}px`);
+          doodle.style.setProperty('--rotate', `${track.doodle.rotate}deg`);
+          doodle.addEventListener('error', () => doodle.remove());
+          $('.track-header-row').appendChild(doodle);
+        }
+
+        // Player: i controlli della riga pilotano il player centrale
+        const playBtn = $('.btn-play');
+        const timeline = $('.timeline');
+        const isCurrent = () => player.getState().track === track;
+        const startFromHere = (seekRatio = null) =>
+          player.playQueue(listOrder, listOrder.indexOf(track), 'order', seekRatio);
+
+        timeline.setAttribute('aria-label', `Avanzamento ${track.title}`);
+        playBtn.addEventListener('click', () => {
+          if (isCurrent()) player.toggle();
+          else startFromHere();
+        });
+        timeline.addEventListener('change', () => {
+          const ratio = timeline.value / 100;
+          if (isCurrent()) player.seek(ratio);
+          else startFromHere(ratio);
+        });
+        trackRows.set(track.number, { playBtn, timeline });
+
+        // Download
+        const download = $('.btn-download');
+        download.href = track.src;
+        download.setAttribute('download', track.file);
+        download.setAttribute('aria-label', `Scarica ${track.title}`);
+
+        // Testo — solo se presente
+        const textBtn = $('.btn-text-toggle');
+        const lyricsContainer = $('.lyrics-container');
+        if (track.lyrics) {
+          const lyricsId = `lyrics-${track.number}`;
+          lyricsContainer.id = lyricsId;
+          $('.lyrics-content').textContent = track.lyrics;
+          textBtn.setAttribute('aria-controls', lyricsId);
+          textBtn.addEventListener('click', () => toggleLyrics(textBtn, lyricsContainer));
+          textBtn.hidden = false;
+          lyricsContainer.hidden = false;
+        } else {
+          textBtn.remove();
+          lyricsContainer.remove();
+        }
+
+        // Video — solo se presente
+        const videoLink = $('.btn-video-link');
+        if (track.video) {
+          videoLink.href = track.video;
+          videoLink.setAttribute('aria-label', `Guarda il video di ${track.title} (si apre in una nuova scheda)`);
+          videoLink.hidden = false;
+        } else {
+          videoLink.remove();
+        }
+
+        // Nessun contenuto extra: rimuove il contenitore vuoto
+        const extras = $('.extra-buttons');
+        if (!extras.children.length) extras.remove();
+
+        return item;
+      }
+
+      function toggleLyrics(button, container) {
+        const isOpen = button.getAttribute('aria-expanded') === 'true';
+        container.style.maxHeight = isOpen ? '0px' : `${container.scrollHeight}px`;
+        button.setAttribute('aria-expanded', String(!isOpen));
+      }
+
+      /* Titolo dell'anno: immagine disegnata a mano; se il file non
+         esiste (es. un anno nuovo senza disegno) resta il testo */
+      function renderYearTitle(titleEl, year) {
+        const img = new Image();
+        img.className = 'year-image';
+        img.alt = String(year);
+        img.decoding = 'async';
+        img.addEventListener('error', () => { titleEl.textContent = year; });
+        img.style.setProperty('--shift', `${-Math.round(4 + stableRandom(`year:${year}`) * 6)}px`); // -4…-10 px
+        img.src = CONFIG.yearImage(year);
+        titleEl.replaceChildren(img);
+      }
+
+      /* Texture grunge: distribuite lungo la pagina, alternando i lati,
+         con dimensione, rotazione e specchiatura variabili (stabili). */
+      function renderGrunge() {
+        const layer = document.getElementById('grunge-layer');
+        const { textures, texturesPath, textureEvery } = CONFIG;
+        if (!layer || !textures.length) return;
+
+        // Le texture partono sotto la testata (la gif ha già il suo effetto disegnato)
+        const header = document.querySelector('header');
+        const updateTop = () => {
+          layer.style.top = header ? `${header.getBoundingClientRect().bottom + window.scrollY}px` : '0px';
+        };
+        updateTop();
+        window.addEventListener('resize', updateTop, { passive: true });
+        if (header) header.querySelector('img')?.addEventListener('load', updateTop);
+
+        const count = Math.max(3, Math.round(layer.offsetHeight / textureEvery));
+        const fragment = document.createDocumentFragment();
+        for (let i = 0; i < count; i++) {
+          const r = (salt) => stableRandom(`grunge:${i}:${salt}`);
+          const img = new Image();
+          img.className = 'grunge-texture';
+          img.src = texturesPath + textures[i % textures.length];
+          img.alt = '';
+          img.decoding = 'async';
+          const side = i % 2 === 0 ? 'left' : 'right';
+          // Centro della texture vicino al bordo della colonna, un po' dentro e un po' fuori
+          const x = side === 'left' ? 18 + r('x') * 22 : 60 + r('x') * 22; // % della larghezza pagina
+          img.style.left = `${x}%`;
+          img.style.top = `${((i + r('y') * 0.8) / count) * 100}%`;
+          img.style.setProperty('--size', `${Math.round(380 + r('s') * 220)}px`);
+          img.style.setProperty('--rotate', `${Math.round(-20 + r('r') * 40)}deg`);
+          img.style.setProperty('--flip', r('f') < 0.5 ? '-1' : '1');
+          img.style.setProperty('--opacity', (0.6 + r('o') * 0.4).toFixed(2));
+          fragment.appendChild(img);
+        }
+        layer.replaceChildren(fragment);
+      }
+
+      /* listOrder: tracce nell'ordine di visualizzazione (più recente prima) */
+      function renderArchive(listOrder) {
+        const archive = document.getElementById('archive');
+        const fragment = document.createDocumentFragment();
+
+        groupByYearDesc(listOrder).forEach((yearTracks, year) => {
+          const group = yearTemplate.content.firstElementChild.cloneNode(true);
+          renderYearTitle(group.querySelector('.year-title'), year);
+          const list = group.querySelector('.track-list');
+          yearTracks.forEach((track) => list.appendChild(renderTrack(track, listOrder)));
+          fragment.appendChild(group);
+        });
+
+        archive.replaceChildren(fragment);
+      }
+
+      /* Sincronizza icone e timeline delle righe con il player */
+      function bindTrackRows() {
+        let activeRow = null;
+
+        player.on((type, state) => {
+          const row = state.track ? trackRows.get(state.track.number) : null;
+
+          if (type === 'trackchange' && activeRow && activeRow !== row) {
+            setPlayIcon(activeRow.playBtn, false);
+            activeRow.timeline.value = 0;
+          }
+          activeRow = row;
+          if (!row) return;
+
+          if (type === 'trackchange') row.timeline.value = 0;
+          if (type === 'statechange' || type === 'trackchange') setPlayIcon(row.playBtn, state.isPlaying);
+          if (type === 'timeupdate' && state.duration) {
+            row.timeline.value = (state.currentTime / state.duration) * 100;
+          }
+        });
+      }
+
+      /* ----------------------------------------------------------
+         4. BARRA "IN RIPRODUZIONE" + BOTTONE CASUALE
+         Compare in basso solo quando c'è un brano caricato.
+         ---------------------------------------------------------- */
+      function initNowPlaying(tracks) {
+        const bar = document.getElementById('now-playing');
+        const modeEl = document.getElementById('np-mode');
+        const titleEl = document.getElementById('np-title');
+        const timeEl = document.getElementById('np-time');
+        const timeline = document.getElementById('np-timeline');
+        const playBtn = document.getElementById('np-play');
+        const shuffleBtn = document.getElementById('shuffle-btn');
+
+        shuffleBtn.addEventListener('click', () => player.playQueue(shuffle(tracks), 0, 'shuffle'));
+        playBtn.addEventListener('click', () => player.toggle());
+        document.getElementById('np-prev').addEventListener('click', () => player.prev());
+        document.getElementById('np-next').addEventListener('click', () => player.next());
+        document.getElementById('np-close').addEventListener('click', () => player.stop());
+        timeline.addEventListener('input', () => player.seek(timeline.value / 100));
+
+        player.on((type, state) => {
+          if (type === 'trackchange') {
+            const hasTrack = Boolean(state.track);
+            bar.hidden = !hasTrack;
+            document.body.classList.toggle('has-now-playing', hasTrack);
+            shuffleBtn.setAttribute('aria-pressed', String(hasTrack && state.mode === 'shuffle'));
+            timeline.value = 0;
+            setPlayIcon(playBtn, state.isPlaying);
+            if (!hasTrack) return;
+            modeEl.textContent = MODE_LABELS[state.mode];
+            titleEl.textContent = `${state.track.label} ${state.track.title}`;
+            timeEl.textContent = '0:00';
+            updateMediaSession(state.track);
+          }
+          if (type === 'statechange') setPlayIcon(playBtn, state.isPlaying);
+          if (type === 'timeupdate') {
+            if (state.duration) timeline.value = (state.currentTime / state.duration) * 100;
+            timeEl.textContent = state.duration
+              ? `${formatTime(state.currentTime)} / ${formatTime(state.duration)}`
+              : formatTime(state.currentTime);
+          }
+        });
+
+        // Controlli di sistema (schermata di blocco, cuffie, tasti multimediali)
+        if ('mediaSession' in navigator) {
+          const actions = {
+            play: () => player.toggle(),
+            pause: () => player.toggle(),
+            previoustrack: () => player.prev(),
+            nexttrack: () => player.next(),
+          };
+          Object.entries(actions).forEach(([action, handler]) => {
+            try { navigator.mediaSession.setActionHandler(action, handler); } catch (_) { /* azione non supportata */ }
+          });
+        }
+      }
+
+      function updateMediaSession(track) {
+        if (!('mediaSession' in navigator) || typeof MediaMetadata === 'undefined') return;
+        // L'artwork è accettato solo da pagine servite via http/https
+        const canUseArtwork = track.coverSrc && location.protocol.startsWith('http');
+        try {
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: track.title,
+            artist: CONFIG.artistName,
+            album: String(track.year),
+            artwork: canUseArtwork ? [{ src: new URL(track.coverSrc, document.baseURI).href }] : [],
+          });
+        } catch (err) {
+          console.warn('[Ragazzo xso] Media Session non disponibile:', err);
+        }
+      }
+
+      /* ----------------------------------------------------------
+         5. CERCA
+         Filtra l'elenco per titolo (o parte di esso) mentre si
+         digita. Ignora maiuscole, accenti e punteggiatura; la
+         numerazione originale delle tracce resta invariata.
+         ---------------------------------------------------------- */
+      function normalizeText(text) {
+        return String(text ?? '')
+          .normalize('NFD')
+          .replace(/[̀-ͯ]/g, '')      // accenti
+          .toLowerCase()
+          .replace(/[^\p{L}\p{N}]+/gu, ' ')      // punteggiatura -> spazio
+          .trim();
+      }
+
+      function initSearch(tracks) {
+        const input = document.getElementById('search-input');
+        const clearBtn = document.getElementById('search-clear');
+        const countEl = document.getElementById('search-count');
+        const emptyEl = document.getElementById('search-empty');
+        const archive = document.getElementById('archive');
+
+        // Indice di ricerca: titoli normalizzati una sola volta all'avvio
+        const entries = tracks.map((track) => {
+          const item = archive.querySelector(`.track-item[data-track-number="${track.number}"]`);
+          return {
+            item,
+            group: item.closest('.year-group'),
+            title: normalizeText(track.title),
+          };
+        });
+        const groups = new Set(entries.map((entry) => entry.group));
+
+        function applyFilter() {
+          const query = normalizeText(input.value);
+          const visibleGroups = new Set();
+          let visible = 0;
+
+          entries.forEach((entry) => {
+            const isMatch = !query || entry.title.includes(query);
+            entry.item.hidden = !isMatch;
+            if (isMatch) {
+              visible++;
+              visibleGroups.add(entry.group);
+            }
+          });
+
+          groups.forEach((group) => { group.hidden = !visibleGroups.has(group); });
+          clearBtn.hidden = !query;
+          emptyEl.hidden = visible > 0;
+          countEl.textContent = query ? `${visible}/${entries.length}` : '';
+        }
+
+        function clearSearch() {
+          input.value = '';
+          applyFilter();
+        }
+
+        input.addEventListener('input', applyFilter);
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') clearSearch();
+        });
+        clearBtn.addEventListener('click', () => {
+          clearSearch();
+          input.focus();
+        });
+
+        applyFilter();
+      }
+
+      /* ----------------------------------------------------------
+         6. MODALE COVER
+         ---------------------------------------------------------- */
+      const modal = document.getElementById('cover-modal');
+      const modalImg = document.getElementById('modal-img');
+      const modalClose = document.getElementById('modal-close');
+      let lastFocused = null;
+
+      function openCoverModal(src, alt, tilt = 0) {
+        lastFocused = document.activeElement;
+        modalImg.src = src;
+        modalImg.alt = alt;
+        modal.style.setProperty('--tilt', `${tilt}deg`);
+        modal.classList.add('active');
+        modalClose.focus();
+      }
+
+      function closeCoverModal() {
+        modal.classList.remove('active');
+        if (lastFocused) lastFocused.focus();
+      }
+
+      modalClose.addEventListener('click', closeCoverModal);
+      modal.addEventListener('click', (e) => { if (e.target === modal) closeCoverModal(); });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) closeCoverModal();
+      });
+
+      /* ----------------------------------------------------------
+         AVVIO
+         ---------------------------------------------------------- */
+      const tracks = prepareTracks(TRACKS);
+      const listOrder = [...tracks].reverse(); // più recente prima
+      layoutDoodles(listOrder);
+      renderArchive(listOrder);
+      renderGrunge();
+      bindTrackRows();
+      initNowPlaying(tracks);
+      initSearch(tracks);
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+# File di lavoro in alta risoluzione (PSD, originali): non vanno pubblicati
+sorgenti/
+
+# File di sistema macOS
+.DS_Store
