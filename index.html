@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ragazzo xso</title>
-  <meta name="description" content="Ragazzo xso, diario musicale: circa 60 canzoni scritte e prodotte in cameretta tra il 2018 e il 2025, da ascoltare e scaricare liberamente." />
+  <meta name="description" content="Il diario musicale di Ragazzo xso. Una raccolta di canzoni, scritte e prodotte “in cameretta” da Matteo Francescato, che esplora il passaggio dall’adolescenza all’età adulta." />
   <meta name="theme-color" content="#0a0a0a" />
 
   <!-- Icone -->
@@ -13,15 +13,15 @@
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
 
-  <!-- Anteprima dei link condivisi (WhatsApp, Instagram, Facebook, Telegram…)
-       NB: og:image funziona in modo affidabile solo con l'indirizzo completo:
-       quando il sito è online sostituire il percorso con l'URL assoluto,
-       es. https://nomeutente.github.io/ragazzoxso/assets/og-image.jpg -->
+  <link rel="canonical" href="https://ragazzoxso.com/" />
+
+  <!-- Anteprima dei link condivisi (WhatsApp, Instagram, Facebook, Telegram…) -->
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ragazzoxso.com/" />
   <meta property="og:site_name" content="Ragazzo xso" />
   <meta property="og:title" content="Ragazzo xso — Diario musicale" />
-  <meta property="og:description" content="Ragazzo xso, diario musicale: circa 60 canzoni scritte e prodotte in cameretta tra il 2018 e il 2025, da ascoltare e scaricare liberamente." />
-  <meta property="og:image" content="assets/og-image.jpg" />
+  <meta property="og:description" content="Il diario musicale di Ragazzo xso. Una raccolta di canzoni, scritte e prodotte “in cameretta” da Matteo Francescato, che esplora il passaggio dall’adolescenza all’età adulta." />
+  <meta property="og:image" content="https://ragazzoxso.com/assets/og-image.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="Ragazzo xso, diario musicale: scritta disegnata a mano" />
@@ -130,6 +130,21 @@
       aspect-ratio: 16 / 9;
       object-fit: contain;
       display: block;
+    }
+
+    /* Su telefono la gif si ingrandisce: il disegno occupa solo la parte
+       centrale del fotogramma (circa il 70% della larghezza), quindi
+       i margini vuoti laterali vengono tagliati fuori dallo schermo. */
+    @media (max-width: 600px) {
+      header {
+        overflow: hidden;
+      }
+
+      .header-animation {
+        width: 142%;
+        max-width: none;
+        margin-top: -4%;
+      }
     }
 
     /* Nascosto alla vista ma letto da motori di ricerca e screen reader */
